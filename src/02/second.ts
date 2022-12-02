@@ -1,6 +1,5 @@
 
-import fs from 'fs';
-import Enumerable from 'linq';
+import InputFile from '../util/InputFile';
 
 const INPUT_FILE = './input/02/input.txt';
 const MOVES: Map<string, number> = new Map([
@@ -15,12 +14,6 @@ const MOVES: Map<string, number> = new Map([
 	['C Z', 1 + 6]
 ]);
 
-const input = fs
-	.readFileSync(INPUT_FILE)
-	.toString();
-const points = Enumerable
-	.from(input.split('\n') as string[])
-	.where(line => line.length > 0)
-	.select(line => MOVES.get(line))
-	.sum();
+const points = InputFile.readLines(INPUT_FILE)
+	.sum(line => MOVES.get(line) || 0);
 console.log(points);
