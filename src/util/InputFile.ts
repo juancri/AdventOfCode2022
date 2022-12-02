@@ -13,12 +13,14 @@ export default class InputFile
 			.where(line => !skipEmpty || line.length > 0);
 	}
 
-	public static readLineGroups(filename: string): IEnumerable<IEnumerable<string>>
+	public static readLineGroups(filename: string, skipEmpty = true): IEnumerable<IEnumerable<string>>
 	{
 		return Enumerable.from(this
 			.readFile(filename)
 			.split('\n\n')
-			.map(group => Enumerable.from(group.split('\n'))));
+			.map(group => Enumerable
+				.from(group.split('\n'))
+				.where(line => !skipEmpty || line.length > 0)));
 	}
 
 	// Private methods
