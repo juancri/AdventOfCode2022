@@ -28,10 +28,8 @@ try
 	fs.mkdirSync(srcDir);
 
 	// Create input file
-	const inputDir = path.join(__dirname, '../input', formattedNumber);
-	console.log(`Creating directory ${inputDir}...`);
-	fs.mkdirSync(inputDir);
-	const inputFile = path.join(inputDir, 'input.txt');
+	const inputDir = path.join(__dirname, '../input');
+	const inputFile = path.join(inputDir, `${formattedNumber}.txt`);
 	console.log(`Writing input file ${inputFile}...`);
 	fs.writeFileSync(inputFile, '');
 
