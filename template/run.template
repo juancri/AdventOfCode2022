@@ -1,10 +1,6 @@
 
-import fs from 'fs';
+import InputFile from '../util/InputFile';
 
-const INPUT_FILE = './input/{{ number }}/input.txt';
-
-const input = fs
-	.readFileSync(INPUT_FILE)
-	.toString();
-
-console.log(input);
+console.log(InputFile
+	.readLines('./input/{{ number }}/input.txt')
+	.toArray());
