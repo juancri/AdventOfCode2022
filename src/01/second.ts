@@ -1,11 +1,8 @@
 
 import InputFile from '../util/InputFile';
 
-const INPUT_FILE = './input/01/input.txt';
-
-const result = InputFile.readLineGroups(INPUT_FILE)
-	.select(group => group.sum(line => parseInt(line)))
+console.log(InputFile.readIntGroups('./input/01/input.txt')
+	.select(group => group.sum())
 	.orderByDescending(x => x)
 	.take(3)
-	.sum();
-console.log(result);
+	.sum());
