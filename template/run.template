@@ -2,5 +2,5 @@
 import InputFile from '../util/InputFile';
 
 console.log(InputFile
-	.readLines('./input/{{ number }}/input.txt')
+	.readLines('./input/{{ number }}.txt')
 	.toArray());
