@@ -15,23 +15,12 @@ const MOVES: Map<string, number> = new Map([
 	['C Z', 1 + 6]
 ]);
 
-function lineToPoints(line: string): number
-{
-	const found = MOVES.get(line);
-	if (!found)
-		throw new Error('Points not found for line: ' + line);
-	return found;
-}
-
 const input = fs
 	.readFileSync(INPUT_FILE)
 	.toString();
-const lines = input.split('\n') as string[];
-
 const points = Enumerable
-	.from(lines)
+	.from(input.split('\n') as string[])
 	.where(line => line.length > 0)
-	.select(lineToPoints)
+	.select(line => MOVES.get(line))
 	.sum();
-
 console.log(points);
