@@ -2,7 +2,7 @@
 import fs from 'fs';
 import Enumerable from 'linq';
 
-const INPUT_FILE = 'input.txt';
+const INPUT_FILE = './input/01/input.txt';
 
 const input = fs
 	.readFileSync(INPUT_FILE)
