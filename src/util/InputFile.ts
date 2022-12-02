@@ -25,13 +25,15 @@ export default class InputFile
 
 	public static readInts(filename: string, skipEmpty = true): IEnumerable<number>
 	{
-		return this.readLines(filename, skipEmpty)
+		return this
+			.readLines(filename, skipEmpty)
 			.select(line => parseInt(line));
 	}
 
 	public static readIntGroups(filename: string, skipEmpty = true): IEnumerable<IEnumerable<number>>
 	{
-		return this.readLineGroups(filename, skipEmpty)
+		return this
+			.readLineGroups(filename, skipEmpty)
 			.select(group => group.select(line => parseInt(line)));
 	}
 
