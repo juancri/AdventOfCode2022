@@ -1,0 +1,10 @@
+
+import fs from 'fs';
+
+const INPUT_FILE = './input/{{ number }}/input.txt';
+
+const input = fs
+	.readFileSync(INPUT_FILE)
+	.toString();
+
+console.log(input);
