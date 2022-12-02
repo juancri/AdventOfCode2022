@@ -1,7 +1,8 @@
 
 import InputFile from '../util/InputFile';
+import RequireKeyMap from '../util/RequireKeyMap';
 
-const MOVES: Map<string, number> = new Map([
+const MOVES = new RequireKeyMap([
 	['A X', 1 + 3],
 	['A Y', 2 + 6],
 	['A Z', 3 + 0],
@@ -15,4 +16,4 @@ const MOVES: Map<string, number> = new Map([
 
 console.log(InputFile
 	.readLines('./input/02/input.txt')
-	.sum(line => MOVES.get(line) || 0));
+	.sum(line => MOVES.get(line)));
