@@ -56,7 +56,6 @@ export default class InputFile
 			.zip(ints.skip(1), (a, b) => [a, b]);
 	}
 
-
 	public static readIntGroupsOf3ForDay(day: number, skipEmpty = true): IEnumerable<[number, number, number]>
 	{
 		const ints = this.readIntsForDay(day, skipEmpty);
@@ -69,7 +68,7 @@ export default class InputFile
 
 	private static getInputFilenameFromDay(day: number): string
 	{
-		const formattedNumber = day < 9 ? `0${day}` : day.toString();
+		const formattedNumber = day <= 9 ? `0${day}` : day.toString();
 		return `input/${formattedNumber}.txt`;
 	}
 
