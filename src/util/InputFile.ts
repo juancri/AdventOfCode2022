@@ -6,38 +6,24 @@ export default class InputFile
 {
 	public static readBitsForDay(day: number, skipEmpty = true): IEnumerable<number[]>
 	{
-		return this.readBits(this.getInputFilenameFromDay(day), skipEmpty);
-	}
-
-	public static readBits(filename: string, skipEmpty = true): IEnumerable<number[]>
-	{
-		return this.readLines(filename, skipEmpty)
-			.select(line => line.split('').map(x => parseInt(x)));
+		return this
+			.readLinesForDay(day, skipEmpty)
+			.select(line => line.split(''))
+			.select(bits => bits.map(x => parseInt(x)));
 	}
 
 	public static readLinesForDay(day: number, skipEmpty = true): IEnumerable<string>
 	{
-		return this.readLines(this.getInputFilenameFromDay(day), skipEmpty);
-	}
-
-	public static readLines(filename: string, skipEmpty = true): IEnumerable<string>
-	{
-		return Enumerable
-			.from(this
-				.readFile(filename)
-				.split('\n'))
-			.where(line => !skipEmpty || line.length > 0);
+		return Enumerable.from(this
+			.readFileForDay(day)
+			.split('\n')
+			.filter(line => !skipEmpty || line.length > 0));
 	}
 
 	public static readLineGroupsForDay(day: number, skipEmpty = true): IEnumerable<IEnumerable<string>>
 	{
-		return this.readLineGroups(this.getInputFilenameFromDay(day), skipEmpty);
-	}
-
-	public static readLineGroups(filename: string, skipEmpty = true): IEnumerable<IEnumerable<string>>
-	{
 		return Enumerable.from(this
-			.readFile(filename)
+			.readFileForDay(day)
 			.split('\n\n')
 			.map(group => Enumerable
 				.from(group.split('\n'))
@@ -46,42 +32,29 @@ export default class InputFile
 
 	public static readIntsForDay(day: number, skipEmpty = true): IEnumerable<number>
 	{
-		return this.readInts(this.getInputFilenameFromDay(day), skipEmpty);
-	}
-
-	public static readInts(filename: string, skipEmpty = true): IEnumerable<number>
-	{
 		return this
-			.readLines(filename, skipEmpty)
+			.readLinesForDay(day, skipEmpty)
 			.select(line => parseInt(line));
 	}
 
 	public static readIntGroupsForDay(day: number, skipEmpty = true): IEnumerable<IEnumerable<number>>
 	{
-		return this.readIntGroups(this.getInputFilenameFromDay(day), skipEmpty);
-	}
-
-	public static readIntGroups(filename: string, skipEmpty = true): IEnumerable<IEnumerable<number>>
-	{
 		return this
-			.readLineGroups(filename, skipEmpty)
+			.readLineGroupsForDay(day, skipEmpty)
 			.select(group => group.select(line => parseInt(line)));
 	}
 
-	public static readIntGroupsOf2(filename: string, skipEmpty = true): IEnumerable<[number, number]>
+	public static readIntGroupsOf2ForDay(day: number, skipEmpty = true): IEnumerable<[number, number]>
 	{
-		const ints = this.readInts(filename, skipEmpty);
-		return ints.zip(ints.skip(1), (a, b) => [a, b]);
+		const ints = this.readIntsForDay(day, skipEmpty);
+		return ints
+			.zip(ints.skip(1), (a, b) => [a, b]);
 	}
+
 
 	public static readIntGroupsOf3ForDay(day: number, skipEmpty = true): IEnumerable<[number, number, number]>
 	{
-		return this.readIntGroupsOf3(this.getInputFilenameFromDay(day), skipEmpty);
-	}
-
-	public static readIntGroupsOf3(filename: string, skipEmpty = true): IEnumerable<[number, number, number]>
-	{
-		const ints = this.readInts(filename, skipEmpty);
+		const ints = this.readIntsForDay(day, skipEmpty);
 		return ints
 			.zip(ints.skip(1), (a, b) => ({ a, b }))
 			.zip(ints.skip(2), (x, c) => [x.a, x.b, c]);
@@ -100,5 +73,10 @@ export default class InputFile
 		return fs
 			.readFileSync(filename)
 			.toString();
+	}
+
+	private static readFileForDay(day: number): string
+	{
+		return this.readFile(this.getInputFilenameFromDay(day));
 	}
 }
