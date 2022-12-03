@@ -13,7 +13,7 @@ Array.prototype.buffer = function(bufferSize: number)
 	return Enumerable
 		.from(this)
 		.buffer(bufferSize)
-		.toArray()
+		.toArray();
 };
 
 Array.prototype.getFirst = function()

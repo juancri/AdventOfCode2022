@@ -7,8 +7,8 @@ console.log(InputFile
 	.readLinesForDay(3)
 	.select(line => line.split(''))
 	.buffer(3)
-	.select(buffer => ArrayUtils
-		.getRepeatedItems(buffer)
+	.select(buffers => ArrayUtils
+		.getRepeatedItems(buffers)
 		.getFirst())
 	.select(letter => letter.match(/[A-Z]/) ?
 		letter.charCodeAt(0) - 'A'.charCodeAt(0) + 27 :
