@@ -1,7 +1,20 @@
 
-interface Array<T> {
-	getFirst(): T;
+import Enumerable from 'linq';
+
+declare global {
+	interface Array<T> {
+		buffer(bufferSize: number): T[][];
+		getFirst(): T;
+	}
 }
+
+Array.prototype.buffer = function(bufferSize: number)
+{
+	return Enumerable
+		.from(this)
+		.buffer(bufferSize)
+		.toArray()
+};
 
 Array.prototype.getFirst = function()
 {
