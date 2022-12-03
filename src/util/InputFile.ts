@@ -1,6 +1,8 @@
 
 import fs from 'fs';
-import Enumerable, { IEnumerable } from 'linq';
+import { IEnumerable } from 'linq';
+
+import './ArrayExtensions';
 
 export default class InputFile
 {
@@ -14,20 +16,23 @@ export default class InputFile
 
 	public static readLinesForDay(day: number, skipEmpty = true): IEnumerable<string>
 	{
-		return Enumerable.from(this
+		return this
 			.readFileForDay(day)
 			.split('\n')
-			.filter(line => !skipEmpty || line.length > 0));
+			.toEnumerable()
+			.where(line => !this.shouldSkip(line, skipEmpty));
 	}
 
 	public static readLineGroupsForDay(day: number, skipEmpty = true): IEnumerable<IEnumerable<string>>
 	{
-		return Enumerable.from(this
+		return this
 			.readFileForDay(day)
 			.split('\n\n')
-			.map(group => Enumerable
-				.from(group.split('\n'))
-				.where(line => !skipEmpty || line.length > 0)));
+			.toEnumerable()
+			.select(group => group
+				.split('\n')
+				.toEnumerable()
+				.where(line => !this.shouldSkip(line, skipEmpty)));
 	}
 
 	public static readIntsForDay(day: number, skipEmpty = true): IEnumerable<number>
@@ -78,5 +83,10 @@ export default class InputFile
 	private static readFileForDay(day: number): string
 	{
 		return this.readFile(this.getInputFilenameFromDay(day));
+	}
+
+	private static shouldSkip(line: string, skipEmpty: boolean): boolean
+	{
+		return skipEmpty && line.length === 0;
 	}
 }

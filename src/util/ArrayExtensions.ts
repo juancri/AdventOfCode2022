@@ -1,10 +1,11 @@
 
-import Enumerable from 'linq';
+import Enumerable, { IEnumerable } from 'linq';
 
 declare global {
 	interface Array<T> {
 		buffer(bufferSize: number): T[][];
 		getFirst(): T;
+		toEnumerable(): IEnumerable<T>
 	}
 }
 
@@ -23,3 +24,7 @@ Array.prototype.getFirst = function()
 	return this[0];
 };
 
+Array.prototype.toEnumerable = function()
+{
+	return Enumerable.from(this);
+}
