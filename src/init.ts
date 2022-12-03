@@ -35,9 +35,12 @@ try
 
 	// Create file
 	const fileContents = TEMPLATE({ number, formattedNumber });
-	const codeFile = path.join(srcDir, 'run.ts');
-	console.log(`Writing source file ${codeFile}...`);
-	fs.writeFileSync(codeFile, fileContents);
+	for (const prefix of ['first', 'second'])
+	{
+		const codeFile = path.join(srcDir, `${prefix}.ts`);
+		console.log(`Writing source file ${codeFile}...`);
+		fs.writeFileSync(codeFile, fileContents);
+	}
 
 	// Done
 	console.log('Done!');
