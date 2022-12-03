@@ -4,6 +4,31 @@ import Enumerable, { IEnumerable } from 'linq';
 
 export default class InputFile
 {
+	public static readBitsForDay(day: number, skipEmpty = true): IEnumerable<number[]>
+	{
+		return this.readBits(this.getInputFilenameFromDay(day), skipEmpty);
+	}
+
+	public static readBits(filename: string, skipEmpty = true): IEnumerable<number[]>
+	{
+		return this.readLines(filename, skipEmpty)
+			.select(line => line.split('').map(x => parseInt(x)));
+	}
+
+	public static readGroupedLinesForDay(day: number, groupSize: number, skipEmpty = true): IEnumerable<IEnumerable<string>>
+	{
+		return this.readGroupedLines(this.getInputFilenameFromDay(day), groupSize, skipEmpty);
+	}
+
+	public static readGroupedLines(filename: string, groupSize: number, skipEmpty = true): IEnumerable<IEnumerable<string>>
+	{
+		return this
+			.readLines(filename, skipEmpty)
+			.select((item, index) => ({ item, index }))
+			.groupBy(x => Math.floor(x.index / groupSize))
+			.select(g => g.select(x => x.item));
+	}
+
 	public static readLinesForDay(day: number, skipEmpty = true): IEnumerable<string>
 	{
 		return this.readLines(this.getInputFilenameFromDay(day), skipEmpty);
@@ -55,6 +80,25 @@ export default class InputFile
 		return this
 			.readLineGroups(filename, skipEmpty)
 			.select(group => group.select(line => parseInt(line)));
+	}
+
+	public static readIntGroupsOf2(filename: string, skipEmpty = true): IEnumerable<[number, number]>
+	{
+		const ints = this.readInts(filename, skipEmpty);
+		return ints.zip(ints.skip(1), (a, b) => [a, b]);
+	}
+
+	public static readIntGroupsOf3ForDay(day: number, skipEmpty = true): IEnumerable<[number, number, number]>
+	{
+		return this.readIntGroupsOf3(this.getInputFilenameFromDay(day), skipEmpty);
+	}
+
+	public static readIntGroupsOf3(filename: string, skipEmpty = true): IEnumerable<[number, number, number]>
+	{
+		const ints = this.readInts(filename, skipEmpty);
+		return ints
+			.zip(ints.skip(1), (a, b) => ({ a, b }))
+			.zip(ints.skip(2), (x, c) => [x.a, x.b, c]);
 	}
 
 	// Private methods
