@@ -15,20 +15,6 @@ export default class InputFile
 			.select(line => line.split('').map(x => parseInt(x)));
 	}
 
-	public static readGroupedLinesForDay(day: number, groupSize: number, skipEmpty = true): IEnumerable<IEnumerable<string>>
-	{
-		return this.readGroupedLines(this.getInputFilenameFromDay(day), groupSize, skipEmpty);
-	}
-
-	public static readGroupedLines(filename: string, groupSize: number, skipEmpty = true): IEnumerable<IEnumerable<string>>
-	{
-		return this
-			.readLines(filename, skipEmpty)
-			.select((item, index) => ({ item, index }))
-			.groupBy(x => Math.floor(x.index / groupSize))
-			.select(g => g.select(x => x.item));
-	}
-
 	public static readLinesForDay(day: number, skipEmpty = true): IEnumerable<string>
 	{
 		return this.readLines(this.getInputFilenameFromDay(day), skipEmpty);
