@@ -2,7 +2,7 @@
 import InputFile from '../util/InputFile';
 
 console.log(InputFile
-	.readIntGroups('input/01.txt')
+	.readIntGroupsForDay(1)
 	.select(group => group.sum())
 	.orderByDescending(x => x)
 	.take(3)

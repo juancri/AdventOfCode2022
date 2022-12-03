@@ -14,5 +14,5 @@ const moves = new RequireKeyMap([
 	['C Z', 1 + 6]
 ]);
 console.log(InputFile
-	.readLines('input/02.txt')
+	.readLinesForDay(2)
 	.sum(line => moves.get(line)));

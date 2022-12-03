@@ -34,7 +34,7 @@ try
 	fs.writeFileSync(inputFile, '');
 
 	// Create file
-	const fileContents = TEMPLATE({ number: formattedNumber });
+	const fileContents = TEMPLATE({ number, formattedNumber });
 	const codeFile = path.join(srcDir, 'run.ts');
 	console.log(`Writing source file ${codeFile}...`);
 	fs.writeFileSync(codeFile, fileContents);
