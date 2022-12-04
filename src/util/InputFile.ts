@@ -14,6 +14,11 @@ export default class InputFile
 			.select(bits => bits.map(x => parseInt(x)));
 	}
 
+	public static readFileForDay(day: number): string
+	{
+		return this.readFile(this.getInputFilenameFromDay(day));
+	}
+
 	public static readLinesForDay(day: number, skipEmpty = true): IEnumerable<string>
 	{
 		return this
@@ -77,11 +82,6 @@ export default class InputFile
 		return fs
 			.readFileSync(filename)
 			.toString();
-	}
-
-	private static readFileForDay(day: number): string
-	{
-		return this.readFile(this.getInputFilenameFromDay(day));
 	}
 
 	private static shouldSkip(line: string, skipEmpty: boolean): boolean
