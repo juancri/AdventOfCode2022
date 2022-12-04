@@ -1,6 +1,5 @@
 
 import InputFile from '../util/InputFile';
-import Pair from '../util/Pair';
 import Segment from '../util/Segment';
 
 console.log(InputFile
@@ -8,6 +7,5 @@ console.log(InputFile
 	.select(line => line.split(','))
 	.select(segments => segments.map(s => s.split('-')))
 	.select(segments => segments.map(s => s.map(x => parseInt(x))))
-	.select(segments => segments.map(Segment.fromNumbers))
-	.select(Pair.fromArray)
-	.count(pair => Segment.intersect(pair.first, pair.second)));
+	.select(segments => segments.map(Segment.fromArray))
+	.count(Segment.intersectArray));
