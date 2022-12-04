@@ -1,3 +1,4 @@
+import Pair from "./Pair";
 
 export default class Segment
 {
@@ -22,6 +23,16 @@ export default class Segment
 		return Segment.intersect(this, s, includeLimits);
 	}
 
+	public static intersectArray(a: Segment[]): boolean
+	{
+		return Segment.intersectPair(Pair.fromArray(a));
+	}
+
+	public static intersectPair(pair: Pair<Segment>): boolean
+	{
+		return Segment.intersect(pair.first, pair.second);
+	}
+
 	public static intersect(s1: Segment, s2: Segment, includeLimits = true): boolean
 	{
 		return includeLimits ?
@@ -29,7 +40,7 @@ export default class Segment
 			s1.min < s2.max && s2.min < s1.max;
 	}
 
-	public static fromNumbers(n: number[]): Segment
+	public static fromArray(n: number[]): Segment
 	{
 		if (n.length !== 2)
 			throw new Error(`Expected length of 2, got ${n.length}`);
