@@ -10,6 +10,6 @@ console.log(InputFile
 	.select(segments => segments.map(s => s.map(x => parseInt(x))))
 	.select(segments => segments.map(Segment.fromArray))
 	.select(Pair.fromArray)
-	.count(pair =>
-		pair.first.contains(pair.second) ||
-		pair.second.contains(pair.first)));
+	.count(({ first, second }) =>
+		first.contains(second) ||
+		second.contains(first)));
