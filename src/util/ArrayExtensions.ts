@@ -4,14 +4,25 @@ import Pair from './Pair';
 
 declare global {
 	interface Array<T> {
+		atCheck(index: number): T;
 		buffer(bufferSize: number): T[][];
 		getFirst(): T;
+		getLast(): T;
 		skipLast(): T[];
+		spliceFromLast(count: number): T[];
 		toEnumerable(): IEnumerable<T>;
 		toIntArray(): number[];
 		toPair(): Pair<T>;
 	}
 }
+
+Array.prototype.atCheck = function(index: number)
+{
+	const found = this.at(index);
+	if (found === undefined)
+		throw new Error(`No element found at index: ${index}`);
+	return found;
+};
 
 Array.prototype.buffer = function(bufferSize: number)
 {
@@ -27,6 +38,18 @@ Array.prototype.getFirst = function()
 		throw new Error('No items found in array');
 	return this[0];
 };
+
+Array.prototype.getLast = function()
+{
+	if (this.length === 0)
+		throw new Error('No items found in array');
+	return this[this.length - 1];
+};
+
+Array.prototype.spliceFromLast = function(count: number)
+{
+	return this.splice(this.length - count);
+}
 
 Array.prototype.toEnumerable = function()
 {
