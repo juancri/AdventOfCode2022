@@ -2,19 +2,15 @@
 import InputFile from '../util/InputFile';
 
 const data = InputFile
-	.readFileForDay(5)
-	.split('\n\n')
-	.map(g => g.split('\n'))
+	.readLineGroupsForDay(5)
+	.toArray()
 	.toPair();
 
 const stacks = data.first
-	.skipLast()
-	.toEnumerable()
 	.select(line => line.split(''))
 	.select(chars => chars.filter((_c, index) => (index - 1) % 4 === 0))
 	.select(crates => crates.map((crate, index) => ({ crate, index })))
-	.select(crates => crates.filter(x => x.crate !== ' '))
-	.selectMany(crates => crates)
+	.selectMany(crates => crates.filter(x => x.crate.trim().length > 0))
 	.groupBy(x => x.index)
 	.orderBy(g => g.first().index)
 	.select(g => g.reverse()
@@ -23,17 +19,16 @@ const stacks = data.first
 	.toArray();
 
 data.second
-	.filter(line => line.length > 0)
-	.map(line => /^move (\d+) from (\d+) to (\d+)$/.exec(line))
-	.map(a => (a as string[]).slice(1, 4))
-	.map(a => a.toIntArray())
-	.forEach(move =>
-	{
-		const from = stacks.atCheck(move.atCheck(1) - 1);
-		stacks
-			.atCheck(move.atCheck(2) - 1)
-			.push(...from.spliceFromLast(move.atCheck(0)).reverse());
-	});
+	.where(line => line.length > 0)
+	.select(line => /^move (\d+) from (\d+) to (\d+)$/.exec(line))
+	.select(match => (match as string[]).slice(1, 4))
+	.select(a => a.toIntArray())
+	.forEach(move => stacks
+		.atCheck(move.atCheck(2) - 1)
+		.push(...stacks
+			.atCheck(move.atCheck(1) - 1)
+			.spliceFromLast(move.atCheck(0))
+			.reverse()));
 
 console.log(stacks
 	.flatMap(stack => stack.getLast())
