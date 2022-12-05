@@ -5,7 +5,8 @@ declare global {
 	interface Array<T> {
 		buffer(bufferSize: number): T[][];
 		getFirst(): T;
-		toEnumerable(): IEnumerable<T>
+		toEnumerable(): IEnumerable<T>;
+		toIntArray(): number[];
 	}
 }
 
@@ -27,4 +28,9 @@ Array.prototype.getFirst = function()
 Array.prototype.toEnumerable = function()
 {
 	return Enumerable.from(this);
+}
+
+Array.prototype.toIntArray = function()
+{
+	return this.map(x => parseInt(x.toString()));
 }
