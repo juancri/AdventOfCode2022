@@ -4,7 +4,7 @@ import Pair from './Pair';
 
 declare global {
 	interface Array<T> {
-		atCheck(index: number): T;
+		get(index: number): T;
 		buffer(bufferSize: number): T[][];
 		getFirst(): T;
 		getLast(): T;
@@ -16,7 +16,7 @@ declare global {
 	}
 }
 
-Array.prototype.atCheck = function(index: number)
+Array.prototype.get = function(index: number)
 {
 	const found = this.at(index);
 	if (found === undefined)
