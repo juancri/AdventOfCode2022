@@ -1,12 +1,15 @@
 
 import Enumerable, { IEnumerable } from 'linq';
+import Pair from './Pair';
 
 declare global {
 	interface Array<T> {
 		buffer(bufferSize: number): T[][];
 		getFirst(): T;
+		skipLast(): T[];
 		toEnumerable(): IEnumerable<T>;
 		toIntArray(): number[];
+		toPair(): Pair<T>;
 	}
 }
 
@@ -33,4 +36,14 @@ Array.prototype.toEnumerable = function()
 Array.prototype.toIntArray = function()
 {
 	return this.map(x => parseInt(x.toString()));
+}
+
+Array.prototype.toPair = function()
+{
+	return Pair.fromArray(this);
+}
+
+Array.prototype.skipLast = function()
+{
+	return this.slice(0, this.length - 1);
 }
