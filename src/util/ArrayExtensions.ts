@@ -4,8 +4,9 @@ import Pair from './Pair';
 
 declare global {
 	interface Array<T> {
-		get(index: number): T;
 		buffer(bufferSize: number): T[][];
+		countDistinct(): number;
+		get(index: number): T;
 		getFirst(): T;
 		getLast(): T;
 		skipLast(): T[];
@@ -14,6 +15,14 @@ declare global {
 		toIntArray(): number[];
 		toPair(): Pair<T>;
 	}
+}
+
+Array.prototype.countDistinct = function()
+{
+	return this
+		.toEnumerable()
+		.distinct()
+		.count();
 }
 
 Array.prototype.get = function(index: number)
