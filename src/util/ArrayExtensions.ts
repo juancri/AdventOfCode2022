@@ -14,6 +14,8 @@ declare global {
 		toEnumerable(): IEnumerable<T>;
 		toIntArray(): number[];
 		toPair(): Pair<T>;
+		windows(size: number): T[][];
+		withIndex(): { item: T, index: number }[];
 	}
 }
 
@@ -79,3 +81,16 @@ Array.prototype.skipLast = function()
 {
 	return this.slice(0, this.length - 1);
 }
+
+Array.prototype.windows = function(size: number)
+{
+	return Enumerable
+		.range(0, this.length - size - 1)
+		.select(index => this.slice(index, index + size))
+		.toArray();
+};
+
+Array.prototype.withIndex = function()
+{
+	return this.map((item, index) => ({ item, index }));
+};
