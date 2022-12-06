@@ -9,12 +9,12 @@ const data = InputFile
 const stacks = data.first
 	.select(line => line.split(''))
 	.select(chars => chars.filter((_c, index) => (index - 1) % 4 === 0))
-	.select(crates => crates.map((crate, index) => ({ crate, index })))
-	.selectMany(crates => crates.filter(({ crate }) => crate.match(/\w/)))
+	.select(crates => crates.withIndex())
+	.selectMany(crates => crates.filter(({ item }) => item.match(/\w/)))
 	.groupBy(({ index }) => index)
 	.orderBy(group => group.first().index)
 	.select(group => group.reverse())
-	.select(group => group.select(({ crate }) => crate))
+	.select(group => group.select(({ item }) => item))
 	.select(group => group.toArray())
 	.toArray();
 
