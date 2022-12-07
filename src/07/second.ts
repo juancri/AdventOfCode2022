@@ -16,41 +16,36 @@ const stack: Node<File>[] = [graph.rootNode];
 InputFile
 	.readLinesForDay(7)
 	.forEach(line => {
-		const cd = line.match(/^\$ cd (.*)$/);
-		const sizeExp = line.match(/(\d+) (.*)$/);
+		const cd = line.match(/^\$ cd (.*)$/) as string[];
+		const sizeExp = line.match(/(\d+) (.*)$/) as string[];
 
 		if (cd)
 		{
-			const dir = cd[1] as string;
-			if (dir === '..')
+			if (cd.get(1) === '..')
 				stack.pop();
 			else
 				stack.push(stack
 					.getLast()
-					.addChildValue({ name: dir, size: 0, isDir: true }));
+					.addChildValue({ name: cd.get(1), size: 0, isDir: true }));
 		}
 		else if (sizeExp)
 		{
-			const name = sizeExp[2] as string;
-			const size = parseInt(sizeExp[1] as string);
 			stack
 				.getLast()
-				.addChildValue({ name, size, isDir: false });
+				.addChildValue({
+					name: sizeExp.get(2),
+					size: parseInt(sizeExp.get(1)),
+					isDir: false });
 		}
 	});
 
-const totalSpace = 70_000_000;
-const targetFree = 30_000_000;
 const currentlyUsed = Enumerable
 	.from(graph.getChildrenValuesRecursive())
 	.sum(file => file.size);
-const currentlyFree = totalSpace - currentlyUsed;
-const needToFree = targetFree - currentlyFree;
-
 console.log(Enumerable
 	.from(graph.getChildrenNodesRecursive())
 	.where(n => n.value.isDir)
 	.select(n => Enumerable.from(n.getChildrenValuesRecursive()))
 	.select(values => values.sum(x => x.size))
-	.where(size => size >= needToFree)
+	.where(size => size >= -40_000_000 + currentlyUsed)
 	.min());
