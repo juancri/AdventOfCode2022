@@ -1,17 +1,10 @@
 
 import Enumerable from 'linq';
-import Graph, { Node } from '../util/Graph';
+import Graph from '../util/Graph';
 import InputFile from '../util/InputFile';
 
-interface File
-{
-	name: string;
-	size: number;
-	isDir: boolean;
-}
-
-const graph = new Graph<File>({ name: '/', size: 0, isDir: true });
-const stack: Node<File>[] = [graph.rootNode];
+const graph = new Graph<[string, number]>([ '/', 0 ]);
+const stack = [graph.rootNode];
 
 InputFile
 	.readLinesForDay(7)
@@ -26,23 +19,19 @@ InputFile
 			else
 				stack.push(stack
 					.getLast()
-					.addChildValue({ name: cd.get(1), size: 0, isDir: true }));
+					.addChildValue([ cd.get(1), 0 ]));
 		}
 		else if (sizeExp)
-		{
 			stack
 				.getLast()
-				.addChildValue({
-					name: sizeExp.get(2),
-					size: parseInt(sizeExp.get(1)),
-					isDir: false });
-		}
+				.addChildValue([
+					sizeExp.get(2),
+					parseInt(sizeExp.get(1)) ]);
 	});
 
 console.log(Enumerable
 	.from(graph.getChildrenNodesRecursive())
-	.where(n => n.value.isDir)
 	.select(n => Enumerable.from(n.getChildrenValuesRecursive()))
-	.select(values => values.sum(x => x.size))
+	.select(values => values.sum(x => x[1]))
 	.where(size => size <= 100_000)
 	.sum());
