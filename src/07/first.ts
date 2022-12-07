@@ -1,5 +1,4 @@
 
-import Enumerable from 'linq';
 import Graph from '../util/Graph';
 import InputFile from '../util/InputFile';
 
@@ -10,28 +9,25 @@ InputFile
 	.readLinesForDay(7)
 	.forEach(line => {
 		const cd = line.match(/^\$ cd (.*)$/) as string[];
-		const sizeExp = line.match(/(\d+) (.*)$/) as string[];
+		const size = line.match(/^(\d+) (.*)$/) as string[];
 
-		if (cd)
-		{
-			if (cd.get(1) === '..')
-				stack.pop();
-			else
-				stack.push(stack
-					.getLast()
-					.addChildValue([ cd.get(1), 0 ]));
-		}
-		else if (sizeExp)
+		if (cd && cd.get(1) === '..')
+			stack.pop();
+		else if (cd && cd.get(1) !== '..')
+			stack.push(stack
+				.getLast()
+				.addChildValue([ cd.get(1), 0 ]));
+		else if (size)
 			stack
 				.getLast()
 				.addChildValue([
-					sizeExp.get(2),
-					parseInt(sizeExp.get(1)) ]);
+					size.get(2),
+					parseInt(size.get(1)) ]);
 	});
 
-console.log(Enumerable
-	.from(graph.getChildrenNodesRecursive())
-	.select(n => Enumerable.from(n.getChildrenValuesRecursive()))
-	.select(values => values.sum(x => x[1]))
+console.log(graph
+	.getAllNodes()
+	.select(node => node.getChildrenValuesRecursive())
+	.select(files => files.sum(x => x[1]))
 	.where(size => size <= 100_000)
 	.sum());

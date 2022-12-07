@@ -1,4 +1,5 @@
 
+import Enumerable, { IEnumerable } from 'linq';
 
 export class Node<T>
 {
@@ -18,21 +19,33 @@ export class Node<T>
 		return node;
 	}
 
-	public *getChildrenNodesRecursive(): Generator<Node<T>>
+	public getChildrenNodesRecursive(): IEnumerable<Node<T>>
+	{
+		return Enumerable.from(this.getChildrenNodesRecursiveInternal());
+	}
+
+	public getChildrenValuesRecursive(): IEnumerable<T>
+	{
+		return Enumerable.from(this.getChildrenValuesRecursiveInternal());
+	}
+
+	// Private methods
+
+	private *getChildrenNodesRecursiveInternal(): Generator<Node<T>>
 	{
 		for (const child of this.children)
 		{
 			yield child;
-			yield *child.getChildrenNodesRecursive();
+			yield *child.getChildrenNodesRecursiveInternal();
 		}
 	}
 
-	public *getChildrenValuesRecursive(): Generator<T>
+	private *getChildrenValuesRecursiveInternal(): Generator<T>
 	{
 		for (const child of this.children)
 		{
 			yield child.value;
-			yield *child.getChildrenValuesRecursive();
+			yield *child.getChildrenValuesRecursiveInternal();
 		}
 	}
 }
@@ -46,15 +59,17 @@ export default class Graph<T>
 		this.rootNode = new Node(rootVale);
 	}
 
-	public *getChildrenNodesRecursive(): Generator<Node<T>>
+	public getAllNodes(): IEnumerable<Node<T>>
 	{
-		yield this.rootNode;
-		yield *this.rootNode.getChildrenNodesRecursive();
+		return Enumerable
+			.from([this.rootNode])
+			.concat(this.rootNode.getChildrenNodesRecursive());
 	}
 
-	public *getChildrenValuesRecursive(): Generator<T>
+	public getAllValues(): IEnumerable<T>
 	{
-		yield this.rootNode.value;
-		yield *this.rootNode.getChildrenValuesRecursive();
+		return Enumerable
+			.from([this.rootNode.value])
+			.concat(this.rootNode.getChildrenValuesRecursive());
 	}
 }
