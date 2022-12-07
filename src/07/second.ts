@@ -2,8 +2,8 @@
 import Graph from '../util/Graph';
 import InputFile from '../util/InputFile';
 
-const graph = new Graph<[string, number]>([ '/', 0 ]);
-const stack = [graph.rootNode];
+const fs = new Graph<[string, number]>([ '/', 0 ]);
+const stack = [fs.rootNode];
 
 InputFile
 	.readLinesForDay(7)
@@ -25,10 +25,10 @@ InputFile
 					parseInt(size.get(1)) ]);
 	});
 
-const currentlyUsed = graph
+const currentlyUsed = fs
 	.getAllValues()
 	.sum(file => file[1]);
-console.log(graph
+console.log(fs
 	.getAllNodes()
 	.select(nodes => nodes.getChildrenValuesRecursive())
 	.select(files => files.sum(x => x[1]))
