@@ -5,18 +5,37 @@ import Pair from './Pair';
 declare global {
 	interface Array<T> {
 		buffer(bufferSize: number): T[][];
+		count(predicate?: (element: T, index: number) => boolean): number;
 		countDistinct(): number;
 		get(index: number): T;
 		getFirst(): T;
 		getLast(): T;
+		min(selector?: (element: T) => number): number;
+		max(selector?: (element: T) => number): number;
 		skipLast(): T[];
 		spliceFromLast(count: number): T[];
+		takeUntil(predicate: (element: T, index: number) => boolean): IEnumerable<T>
 		toEnumerable(): IEnumerable<T>;
 		toIntArray(): number[];
 		toPair(): Pair<T>;
 		windows(size: number): T[][];
 		withIndex(): { item: T, index: number }[];
 	}
+}
+
+Array.prototype.buffer = function(bufferSize: number)
+{
+	return Enumerable
+		.from(this)
+		.buffer(bufferSize)
+		.toArray();
+};
+
+Array.prototype.count = function(predicate)
+{
+	return Enumerable
+		.from(this)
+		.count(predicate);
 }
 
 Array.prototype.countDistinct = function()
@@ -35,14 +54,6 @@ Array.prototype.get = function(index: number)
 	return found;
 };
 
-Array.prototype.buffer = function(bufferSize: number)
-{
-	return Enumerable
-		.from(this)
-		.buffer(bufferSize)
-		.toArray();
-};
-
 Array.prototype.getFirst = function()
 {
 	if (this.length === 0)
@@ -57,9 +68,36 @@ Array.prototype.getLast = function()
 	return this[this.length - 1];
 };
 
+Array.prototype.min = function(selector)
+{
+	return this.toEnumerable().max(selector);
+}
+
+Array.prototype.max = function(selector)
+{
+	return this.toEnumerable().max(selector);
+}
+
 Array.prototype.spliceFromLast = function(count: number)
 {
 	return this.splice(this.length - count);
+}
+
+function *takeUntilInternal(array: any[], predicate: (element: any, index: number) => boolean)
+{
+	if (!array.length)
+		return;
+	for (let i = 0; i < array.length; i++)
+	{
+		yield array[i];
+		if (predicate(array[i], i))
+			return;
+	}
+}
+
+Array.prototype.takeUntil = function(predicate)
+{
+	return Enumerable.from(takeUntilInternal(this, predicate));
 }
 
 Array.prototype.toEnumerable = function()
