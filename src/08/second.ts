@@ -4,7 +4,7 @@ import InputFile from '../util/InputFile';
 console.log(InputFile
 	.readDigitsMapForDay(8)
 	.getActionableEntries()
-	.select(t =>
+	.max(t =>
 		t.getValuesLeft(true)
 			.toArray()
 			.takeUntilIncluding(v => v >= t.value)
@@ -20,5 +20,4 @@ console.log(InputFile
 		t.getValuesDown()
 			.toArray()
 			.takeUntilIncluding(v => v >= t.value)
-			.count())
-	.max());
+			.count()));
