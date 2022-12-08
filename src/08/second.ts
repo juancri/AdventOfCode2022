@@ -7,18 +7,18 @@ console.log(InputFile
 	.select(t =>
 		t.getValuesLeft(true)
 			.toArray()
-			.TakeUntilIncluding(v => v >= t.value)
+			.takeUntilIncluding(v => v >= t.value)
 			.count() *
 		t.getValuesUp(true)
 			.toArray()
-			.TakeUntilIncluding(v => v >= t.value)
+			.takeUntilIncluding(v => v >= t.value)
 			.count() *
 		t.getValuesRight()
 			.toArray()
-			.TakeUntilIncluding(v => v >= t.value)
+			.takeUntilIncluding(v => v >= t.value)
 			.count() *
 		t.getValuesDown()
 			.toArray()
-			.TakeUntilIncluding(v => v >= t.value)
+			.takeUntilIncluding(v => v >= t.value)
 			.count())
 	.max());

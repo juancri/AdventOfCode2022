@@ -14,7 +14,7 @@ declare global {
 		max(selector?: (element: T) => number): number;
 		skipLast(): T[];
 		spliceFromLast(count: number): T[];
-		TakeUntilIncluding(predicate: (element: T, index: number) => boolean): IEnumerable<T>
+		takeUntilIncluding(predicate: (element: T, index: number) => boolean): IEnumerable<T>
 		toEnumerable(): IEnumerable<T>;
 		toIntArray(): number[];
 		toPair(): Pair<T>;
@@ -95,7 +95,7 @@ function *takeUntilIncludingInternal(array: any[], predicate: (element: any, ind
 	}
 }
 
-Array.prototype.TakeUntilIncluding = function(predicate)
+Array.prototype.takeUntilIncluding = function(predicate)
 {
 	return Enumerable.from(takeUntilIncludingInternal(this, predicate));
 }
