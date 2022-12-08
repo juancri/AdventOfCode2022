@@ -11,18 +11,18 @@ console.log(trees
 	.select(t =>
 		trees.getValuesLeftOf(t, true)
 			.toArray()
-			.takeUntil(v => v >= t.value)
+			.TakeUntilIncluding(v => v >= t.value)
 			.count() *
 		trees.getValuesUpOf(t, true)
 			.toArray()
-			.takeUntil(v => v >= t.value)
+			.TakeUntilIncluding(v => v >= t.value)
 			.count() *
 		trees.getValuesRightOf(t)
 			.toArray()
-			.takeUntil(v => v >= t.value)
+			.TakeUntilIncluding(v => v >= t.value)
 			.count() *
 		trees.getValuesDownOf(t)
 			.toArray()
-			.takeUntil(v => v >= t.value)
+			.TakeUntilIncluding(v => v >= t.value)
 			.count())
 	.max());
