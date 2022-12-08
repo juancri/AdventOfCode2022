@@ -12,10 +12,10 @@ export interface Entry2D<T>
 };
 export interface ActionableEntry2D<T> extends Entry2D<T>
 {
-	getValuesLeft(reverse?: boolean): IEnumerable<T>;
-	getValuesRight(reverse?: boolean): IEnumerable<T>;
-	getValuesUp(reverse?: boolean): IEnumerable<T>;
-	getValuesDown(reverse?: boolean): IEnumerable<T>;
+	getValuesLeft(): IEnumerable<T>;
+	getValuesRight(): IEnumerable<T>;
+	getValuesUp(): IEnumerable<T>;
+	getValuesDown(): IEnumerable<T>;
 };
 
 export default class Map2D<T>
@@ -61,28 +61,28 @@ export default class Map2D<T>
 			.select(item => Map2D.mapEntryToEntry2D(item));
 	}
 
-	public getValuesLeftOf(entry: Entry2D<T>, reverse = false): IEnumerable<T>
+	public getValuesLeftOf(entry: Entry2D<T>): IEnumerable<T>
 	{
 		return Enumerable.from(
-			this.getValuesWithinLimits(0, entry.x - 1, entry.y, entry.y, reverse));
+			this.getValuesWithinLimits(0, entry.x - 1, entry.y, entry.y, true));
 	}
 
-	public getValuesRightOf(entry: Entry2D<T>, reverse = false): IEnumerable<T>
+	public getValuesRightOf(entry: Entry2D<T>): IEnumerable<T>
 	{
 		return Enumerable.from(
-			this.getValuesWithinLimits(entry.x + 1, this.maxX, entry.y, entry.y, reverse));
+			this.getValuesWithinLimits(entry.x + 1, this.maxX, entry.y, entry.y));
 	}
 
-	public getValuesUpOf(entry: Entry2D<T>, reverse = false): IEnumerable<T>
+	public getValuesUpOf(entry: Entry2D<T>): IEnumerable<T>
 	{
 		return Enumerable.from(
-			this.getValuesWithinLimits(entry.x, entry.x, 0, entry.y - 1, reverse));
+			this.getValuesWithinLimits(entry.x, entry.x, 0, entry.y - 1, true));
 	}
 
-	public getValuesDownOf(entry: Entry2D<T>, reverse = false): IEnumerable<T>
+	public getValuesDownOf(entry: Entry2D<T>): IEnumerable<T>
 	{
 		return Enumerable.from(
-			this.getValuesWithinLimits(entry.x, entry.x, entry.y + 1, this.maxY, reverse));
+			this.getValuesWithinLimits(entry.x, entry.x, entry.y + 1, this.maxY));
 	}
 
 	public static fromDigits(input: IEnumerable<string>): Map2D<number>
@@ -97,14 +97,14 @@ export default class Map2D<T>
 	{
 		return {
 			...entry,
-			getValuesLeft: (reverse = false) => this.getValuesLeftOf(entry, reverse),
-			getValuesRight: (reverse = false) => this.getValuesRightOf(entry, reverse),
-			getValuesUp: (reverse = false) => this.getValuesUpOf(entry, reverse),
-			getValuesDown: (reverse = false) => this.getValuesDownOf(entry, reverse)
+			getValuesLeft: () => this.getValuesLeftOf(entry),
+			getValuesRight: () => this.getValuesRightOf(entry),
+			getValuesUp: () => this.getValuesUpOf(entry),
+			getValuesDown: () => this.getValuesDownOf(entry)
 		};
 	}
 
-	private *getValuesWithinLimits(minX: number, maxX: number, minY: number, maxY: number, reverse: boolean): Generator<T>
+	private *getValuesWithinLimits(minX: number, maxX: number, minY: number, maxY: number, reverse = false): Generator<T>
 	{
 		const startX = reverse ? maxX : minX;
 		const startY = reverse ? maxY : minY;
