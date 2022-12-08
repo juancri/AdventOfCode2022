@@ -23,7 +23,6 @@ export default class Map2D<T>
 			.toEnumerable()
 			.selectMany((values, yIndex) => values.map((val, xIndex) => ({ xIndex, yIndex, val })))
 			.select(x => [Map2D.createMapKey(x.xIndex, x.yIndex), x.val] as [string, T]));
-		console.log(Array.from(this.map.entries()));
 		this.maxX = values.get(0).length - 1;
 		this.maxY = values.length - 1;
 	}
