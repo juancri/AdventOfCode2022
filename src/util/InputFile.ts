@@ -3,6 +3,7 @@ import fs from 'fs';
 import { IEnumerable } from 'linq';
 
 import './ArrayExtensions';
+import Map2D from './Map2D';
 
 export default class InputFile
 {
@@ -12,6 +13,11 @@ export default class InputFile
 			.readLinesForDay(day, skipEmpty)
 			.select(line => line.split(''))
 			.select(bits => bits.map(x => parseInt(x)));
+	}
+
+	public static readDigitsMapForDay(day: number): Map2D<number>
+	{
+		return Map2D.fromDigits(this.readLinesForDay(day, true));
 	}
 
 	public static readFileForDay(day: number): string

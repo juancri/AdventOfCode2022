@@ -1,17 +1,12 @@
 
 import InputFile from '../util/InputFile';
-import Map2D from '../util/Map2D';
 
-const trees = new Map2D(InputFile.readLinesForDay(8)
-	.select(line => line.split(''))
-	.select(chars => chars.toIntArray())
-	.toArray());
-
-console.log(trees
-	.getEntries()
+console.log(InputFile
+	.readDigitsMapForDay(8)
+	.getActionableEntries()
 	.where(t =>
-		trees.getValuesLeftOf(t).all(v => v < t.value) ||
-		trees.getValuesUpOf(t).all(v => v < t.value) ||
-		trees.getValuesRightOf(t).all(v => v < t.value) ||
-		trees.getValuesDownOf(t).all(v => v < t.value))
+		t.getValuesLeft().all(v => v < t.value) ||
+		t.getValuesUp().all(v => v < t.value) ||
+		t.getValuesRight().all(v => v < t.value) ||
+		t.getValuesDown().all(v => v < t.value))
 	.count());

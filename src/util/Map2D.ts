@@ -4,7 +4,19 @@ const MAP_KEY_REGEX = /^(\d+)_(\d+)$/;
 const CHECK_MIN = (val: number, min: number, _max: number) => val >= min;
 const CHECK_MAX = (val: number, _min: number, max: number) => val <= max;
 
-export type Entry2D<T> = { x: number, y: number, value: T };
+export interface Entry2D<T>
+{
+	x: number;
+	y: number;
+	value: T;
+};
+export interface ActionableEntry2D<T> extends Entry2D<T>
+{
+	getValuesLeft(reverse?: boolean): IEnumerable<T>;
+	getValuesRight(reverse?: boolean): IEnumerable<T>;
+	getValuesUp(reverse?: boolean): IEnumerable<T>;
+	getValuesDown(reverse?: boolean): IEnumerable<T>;
+};
 
 export default class Map2D<T>
 {
@@ -33,6 +45,13 @@ export default class Map2D<T>
 		if (found === undefined)
 			throw new Error(`No value found for (${x},${y}), max X: ${this.maxX}, max Y: ${this.maxY}`);
 		return found;
+	}
+
+	public getActionableEntries(): IEnumerable<ActionableEntry2D<T>>
+	{
+		return this
+			.getEntries()
+			.select(entry => this.createActionableEntry(entry));
 	}
 
 	public getEntries(): IEnumerable<Entry2D<T>>
@@ -64,6 +83,25 @@ export default class Map2D<T>
 	{
 		return Enumerable.from(
 			this.getValuesWithinLimits(entry.x, entry.x, entry.y + 1, this.maxY, reverse));
+	}
+
+	public static fromDigits(input: IEnumerable<string>): Map2D<number>
+	{
+		return new Map2D(input
+			.select(line => line.split(''))
+			.select(chars => chars.toIntArray())
+			.toArray());
+	}
+
+	private createActionableEntry(entry: Entry2D<T>): ActionableEntry2D<T>
+	{
+		return {
+			...entry,
+			getValuesLeft: (reverse = false) => this.getValuesLeftOf(entry, reverse),
+			getValuesRight: (reverse = false) => this.getValuesRightOf(entry, reverse),
+			getValuesUp: (reverse = false) => this.getValuesUpOf(entry, reverse),
+			getValuesDown: (reverse = false) => this.getValuesDownOf(entry, reverse)
+		};
 	}
 
 	private *getValuesWithinLimits(minX: number, maxX: number, minY: number, maxY: number, reverse: boolean): Generator<T>
