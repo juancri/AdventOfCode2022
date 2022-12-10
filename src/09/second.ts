@@ -17,29 +17,28 @@ const knotPositions: NumberPair[] = ArrayUtils.createWith(10, () => [0, 0]);
 InputFile
 	.readLinesForDay(9)
 	.select(line => line.split(' '))
-	.select(words => ({ command: words.get(0), count: parseInt(words.get(1)) }))
+	.select(words => ({ command: MOVE.get(words.get(0)), count: parseInt(words.get(1)) }))
 	.forEach(({ command, count }) =>
 	{
 		while (count-- > 0)
 		{
-			knotPositions[0] = MOVE.get(command)(knotPositions.get(0));
+			knotPositions[0] = command(knotPositions.get(0));
+
 			for (let i = 0; i < knotPositions.length - 1; i++)
 			{
 				const first = knotPositions.get(i);
 				const second = knotPositions.get(i + 1);
 				const diffX = first[0] - second[0];
 				const diffY = first[1] - second[1];
-				if (first[1] === second[1] && Math.abs(diffX) > 1)
-					second[0] = (diffX < 0) ? second[0] - 1 : second[0] + 1;
-				else if (first[0] === second[0] && Math.abs(diffY) > 1)
-					second[1] = (diffY < 0) ? second[1] - 1 : second[1] + 1;
-				else if (first[0] != second[0] && first[1] != second[1] &&
-					(Math.abs(diffX) > 1 || Math.abs(diffY) > 1))
-				{
-					second[0] = (diffX < 0) ? second[0] - 1 : second[0] + 1;
-					second[1] = (diffY < 0) ? second[1] - 1 : second[1] + 1;
-				}
-
+				const sameColumn = first[0] === second[0];
+				const sameRow = first[1] === second[1];
+				const bigDiffX = Math.abs(diffX) > 1;
+				const bigDiffY = Math.abs(diffY) > 1;
+				const moveDiagonal = !sameRow && !sameColumn && (bigDiffX || bigDiffY);
+				if (sameRow && bigDiffX || moveDiagonal)
+					second[0] += (diffX > 0) ? 1 : -1;
+				if (sameColumn && bigDiffY || moveDiagonal)
+					second[1] += (diffY > 0) ? 1 : -1;
 				knotPositions[i+1] = second;
 			}
 
