@@ -1,4 +1,5 @@
 
+import Enumerable from 'linq';
 import ArrayUtils from '../util/ArrayUtils';
 import InputFile from '../util/InputFile';
 import RequireKeyMap from '../util/RequireKeyMap';
@@ -17,32 +18,29 @@ const knots: Coordinates[] = ArrayUtils.createWith(2, () => ({ x: 0, y: 0 }));
 InputFile
 	.readLinesForDay(9)
 	.select(line => line.split(' '))
-	.select(words => ({ command: MOVE.get(words.get(0)), count: parseInt(words.get(1)) }))
-	.forEach(({ command, count }) =>
+	.select(words => ({ command: words.get(0), count: parseInt(words.get(1)) }))
+	.selectMany(({ command, count }) => Enumerable.repeat(MOVE.get(command), count))
+	.forEach(command =>
 	{
-		while (count--)
+		knots[0] = command(knots.get(0));
+		for (let i = 0; i < knots.length - 1; i++)
 		{
-			knots[0] = command(knots.get(0));
-
-			for (let i = 0; i < knots.length - 1; i++)
-			{
-				const first = knots.get(i);
-				const second = knots.get(i + 1);
-				const diffX = first.x - second.x;
-				const diffY = first.y - second.y;
-				const sameColumn = first.x === second.x;
-				const sameRow = first.y === second.y;
-				const bigDiffX = Math.abs(diffX) > 1;
-				const bigDiffY = Math.abs(diffY) > 1;
-				const moveDiagonal = !sameRow && !sameColumn && (bigDiffX || bigDiffY);
-				if ((sameRow && bigDiffX) || moveDiagonal)
-					second.x += (diffX > 0) ? 1 : -1;
-				if ((sameColumn && bigDiffY) || moveDiagonal)
-					second.y += (diffY > 0) ? 1 : -1;
-			}
-
-			visited.add(`${knots.getLast().x}_${knots.getLast().y}`);
+			const first = knots.get(i);
+			const second = knots.get(i + 1);
+			const diffX = first.x - second.x;
+			const diffY = first.y - second.y;
+			const sameColumn = first.x === second.x;
+			const sameRow = first.y === second.y;
+			const bigDiffX = Math.abs(diffX) > 1;
+			const bigDiffY = Math.abs(diffY) > 1;
+			const moveDiagonal = !sameRow && !sameColumn && (bigDiffX || bigDiffY);
+			if ((sameRow && bigDiffX) || moveDiagonal)
+				second.x += (diffX > 0) ? 1 : -1;
+			if ((sameColumn && bigDiffY) || moveDiagonal)
+				second.y += (diffY > 0) ? 1 : -1;
 		}
+
+		visited.add(`${knots.getLast().x}_${knots.getLast().y}`);
 	});
 
 console.log(visited.size);
