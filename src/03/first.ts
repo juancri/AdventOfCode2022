@@ -9,6 +9,5 @@ console.log(InputFile
 	.select(letters => letters.buffer(letters.length / 2))
 	.select(ArrayUtils.getRepeatedItems)
 	.select(letters => letters.getFirst())
-	.sum(letter => letter.match(/[A-Z]/) ?
-		letter.charCodeAt(0) - 38 :
-		letter.charCodeAt(0) - 96));
+	.sum(l => l.charCodeAt(0) -
+		(l.match(/[A-Z]/) ? 38 : 96)));

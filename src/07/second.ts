@@ -32,5 +32,5 @@ console.log(fs
 	.getAllNodes()
 	.select(nodes => nodes.getChildrenValuesRecursive())
 	.select(files => files.sum(x => x[1]))
-	.where(size => size >= -40_000_000 + currentlyUsed)
+	.where(size => size + 40_000_000 >= currentlyUsed)
 	.min());
