@@ -15,6 +15,14 @@ export default class InputFile
 			.select(bits => bits.map(x => parseInt(x)));
 	}
 
+	public static readCharsForDay(day: number, trim = true): string[]
+	{
+		let input = this.readFileForDay(day);
+		if (trim)
+			input = input.trim();
+		return input.split('');
+	}
+
 	public static readDigitsMapForDay(day: number): Map2D<number>
 	{
 		return Map2D.fromDigits(this.readLinesForDay(day, true));
