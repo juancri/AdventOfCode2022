@@ -12,6 +12,7 @@ declare global {
 		getLast(): T;
 		min(selector?: (element: T) => number): number;
 		max(selector?: (element: T) => number): number;
+		pairWindows(): Pair<T>[];
 		skipLast(): T[];
 		spliceFromLast(count: number): T[];
 		takeUntilIncluding(predicate: (element: T, index: number) => boolean): IEnumerable<T>
@@ -78,6 +79,13 @@ Array.prototype.max = function(selector)
 	return this.toEnumerable().max(selector);
 }
 
+Array.prototype.pairWindows = function()
+{
+	return this
+		.windows(2)
+		.map(item => item.toPair());
+}
+
 Array.prototype.spliceFromLast = function(count: number)
 {
 	return this.splice(this.length - count);
@@ -123,7 +131,7 @@ Array.prototype.skipLast = function()
 Array.prototype.windows = function(size: number)
 {
 	return Enumerable
-		.range(0, this.length - size - 1)
+		.range(0, this.length - size + 1)
 		.select(index => this.slice(index, index + size))
 		.toArray();
 };
