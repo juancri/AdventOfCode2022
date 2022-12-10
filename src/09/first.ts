@@ -1,85 +1,51 @@
 
-import Enumerable from 'linq';
+import ArrayUtils from '../util/ArrayUtils';
 import InputFile from '../util/InputFile';
+import RequireKeyMap from '../util/RequireKeyMap';
 
-function posToString(pos: [number, number]): string
-{
-	return `${pos[0]}_${pos[1]}`;
-}
+type NumberPair = [number, number];
+const MOVE = new RequireKeyMap<string, (pos: NumberPair) => NumberPair>([
+	['R', (pos) => [pos[0] + 1, pos[1] + 0]],
+	['L', (pos) => [pos[0] - 1, pos[1] + 0]],
+	['U', (pos) => [pos[0] + 0, pos[1] + 1]],
+	['D', (pos) => [pos[0] + 0, pos[1] - 1]]
+]);
 
-function getNextPositions(headPos: [number, number], tailPos: [number, number]): [number, number]
-{
-
-	const diffX = Math.abs(headPos[0] - tailPos[0]);
-	const diffY = Math.abs(headPos[1] - tailPos[1]);
-	if (headPos[1] == tailPos[1] && diffX > 1)
-		tailPos[0] = (headPos[0] - tailPos[0] < 0) ? tailPos[0] - 1 : tailPos[0] + 1;
-	if (headPos[0] == tailPos[0] && diffY > 1)
-		tailPos[1] = (headPos[1] - tailPos[1] < 0) ? tailPos[1] - 1 : tailPos[1] + 1;
-	if (headPos[0] != tailPos[0] && headPos[1] != tailPos[1] && (diffX > 1 || diffY > 1))
-	{
-		tailPos[0] = (headPos[0] - tailPos[0] < 0) ? tailPos[0] - 1 : tailPos[0] + 1;
-		tailPos[1] = (headPos[1] - tailPos[1] < 0) ? tailPos[1] - 1 : tailPos[1] + 1;
-	}
-
-	return tailPos;
-}
-
-const visited = new Set<string>();
-
-const knotPositions: [number, number][] = [
-	[0,0], // head
-	[0,0],
-	[0,0],
-	[0,0],
-	[0,0],
-	[0,0],
-	[0,0],
-	[0,0],
-	[0,0],
-	[0,0] // tail
-];
-
-visited.add(posToString(knotPositions.getLast()));
+const visited = new Set<string>(['0_0']);
+const knotPositions: NumberPair[] = ArrayUtils.createWith(2, () => [0, 0]);
 
 InputFile
 	.readLinesForDay(9)
 	.select(line => line.split(' '))
-	.select(parts => parts.toPair())
-	.select(pair => ({ command: pair.first, count: parseInt(pair.second) }))
+	.select(words => ({ command: words.get(0), count: parseInt(words.get(1)) }))
 	.forEach(({ command, count }) =>
 	{
 		while (count-- > 0)
 		{
-			// Move head
-			let  headPos = knotPositions[0] as [number, number];
-			if (command === 'R')
-				headPos = [headPos[0] + 1, headPos[1]];
-			if (command === 'L')
-				headPos = [headPos[0] - 1, headPos[1]];
-			if (command === 'U')
-				headPos = [headPos[0], headPos[1] - 1];
-			if (command === 'D')
-				headPos = [headPos[0], headPos[1] + 1];
-
-			knotPositions[0] = headPos;
+			knotPositions[0] = MOVE.get(command)(knotPositions.get(0));
 			for (let i = 0; i < knotPositions.length - 1; i++)
 			{
 				const first = knotPositions.get(i);
 				const second = knotPositions.get(i + 1);
-				const newPos = getNextPositions(first, second);
-				knotPositions[i+1] = newPos;
+				const diffX = first[0] - second[0];
+				const diffY = first[1] - second[1];
+				if (first[1] === second[1] && Math.abs(diffX) > 1)
+					second[0] = (diffX < 0) ? second[0] - 1 : second[0] + 1;
+				else if (first[0] === second[0] && Math.abs(diffY) > 1)
+					second[1] = (diffY < 0) ? second[1] - 1 : second[1] + 1;
+				else if (first[0] != second[0] && first[1] != second[1] &&
+					(Math.abs(diffX) > 1 || Math.abs(diffY) > 1))
+				{
+					second[0] = (diffX < 0) ? second[0] - 1 : second[0] + 1;
+					second[1] = (diffY < 0) ? second[1] - 1 : second[1] + 1;
+				}
+
+				knotPositions[i+1] = second;
 			}
 
-			visited.add(posToString(knotPositions.getLast()));
+			const tailPos = knotPositions.getLast();
+			visited.add(`${tailPos[0]}_${tailPos[1]}`);
 		}
 	});
 
-console.log(visited.entries());
-console.log(knotPositions);
-console.log(Enumerable
-	.from(visited.entries())
-	.distinct()
-	.count());
-
-
+console.log(visited.size);
