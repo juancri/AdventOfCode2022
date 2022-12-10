@@ -3,16 +3,16 @@ import ArrayUtils from '../util/ArrayUtils';
 import InputFile from '../util/InputFile';
 import RequireKeyMap from '../util/RequireKeyMap';
 
-type NumberPair = [number, number];
-const MOVE = new RequireKeyMap<string, (pos: NumberPair) => NumberPair>([
-	['R', (pos) => [pos[0] + 1, pos[1] + 0]],
-	['L', (pos) => [pos[0] - 1, pos[1] + 0]],
-	['U', (pos) => [pos[0] + 0, pos[1] + 1]],
-	['D', (pos) => [pos[0] + 0, pos[1] - 1]]
+interface Coordinates { x: number, y: number }
+const MOVE = new RequireKeyMap<string, (c: Coordinates) => Coordinates> ([
+	['R', c => ({ x: c.x + 1, y: c.y + 0 })],
+	['L', c => ({ x: c.x - 1, y: c.y + 0 })],
+	['U', c => ({ x: c.x + 0, y: c.y + 1 })],
+	['D', c => ({ x: c.x + 0, y: c.y - 1 })]
 ]);
 
 const visited = new Set<string>(['0_0']);
-const knotPositions: NumberPair[] = ArrayUtils.createWith(2, () => [0, 0]);
+const knots: Coordinates[] = ArrayUtils.createWith(2, () => ({ x: 0, y: 0 }));
 
 InputFile
 	.readLinesForDay(9)
@@ -20,30 +20,28 @@ InputFile
 	.select(words => ({ command: MOVE.get(words.get(0)), count: parseInt(words.get(1)) }))
 	.forEach(({ command, count }) =>
 	{
-		while (count-- > 0)
+		while (count--)
 		{
-			knotPositions[0] = command(knotPositions.get(0));
+			knots[0] = command(knots.get(0));
 
-			for (let i = 0; i < knotPositions.length - 1; i++)
+			for (let i = 0; i < knots.length - 1; i++)
 			{
-				const first = knotPositions.get(i);
-				const second = knotPositions.get(i + 1);
-				const diffX = first[0] - second[0];
-				const diffY = first[1] - second[1];
-				const sameColumn = first[0] === second[0];
-				const sameRow = first[1] === second[1];
+				const first = knots.get(i);
+				const second = knots.get(i + 1);
+				const diffX = first.x - second.x;
+				const diffY = first.y - second.y;
+				const sameColumn = first.x === second.x;
+				const sameRow = first.y === second.y;
 				const bigDiffX = Math.abs(diffX) > 1;
 				const bigDiffY = Math.abs(diffY) > 1;
 				const moveDiagonal = !sameRow && !sameColumn && (bigDiffX || bigDiffY);
 				if ((sameRow && bigDiffX) || moveDiagonal)
-					second[0] += (diffX > 0) ? 1 : -1;
+					second.x += (diffX > 0) ? 1 : -1;
 				if ((sameColumn && bigDiffY) || moveDiagonal)
-					second[1] += (diffY > 0) ? 1 : -1;
-				knotPositions[i+1] = second;
+					second.y += (diffY > 0) ? 1 : -1;
 			}
 
-			const tailPos = knotPositions.getLast();
-			visited.add(`${tailPos[0]}_${tailPos[1]}`);
+			visited.add(`${knots.getLast().x}_${knots.getLast().y}`);
 		}
 	});
 
