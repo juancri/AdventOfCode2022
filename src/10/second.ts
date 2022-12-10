@@ -6,15 +6,14 @@ const state = { cycle: 0, register: 1, row: '' };
 InputFile
 	.readLinesForDay(10)
 	.select(line => line.split(' '))
-	.select(words => words[1])
-	.selectMany(num => num ? [0, parseInt(num)] : [0])
+	.selectMany(words => words[1] ? [0, parseInt(words[1])] : [0])
 	.forEach(num =>
 	{
-		state.row += Math.abs(state.register - state.row.length) <= 1 ? '#' : ' ';
+		state.row += Math.abs(state.register - state.row.length) < 2 ? '#' : ' ';
 		state.register += num;
-		if (++state.cycle % 40 !== 0)
-			return;
-
-		console.log(state.row);
-		state.row = '';
+		if (++state.cycle % 40 === 0)
+		{
+			console.log(state.row);
+			state.row = '';
+		}
 	});

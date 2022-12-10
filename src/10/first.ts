@@ -6,8 +6,7 @@ const state = { cycle: 0, register: 1, strength: 0 };
 InputFile
 	.readLinesForDay(10)
 	.select(line => line.split(' '))
-	.select(words => words[1])
-	.selectMany(num => num ? [0, parseInt(num)] : [0])
+	.selectMany(words => words[1] ? [0, parseInt(words[1])] : [0])
 	.forEach(num =>
 	{
 		if ((++state.cycle - 20) % 40 === 0)
