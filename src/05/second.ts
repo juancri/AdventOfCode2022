@@ -1,24 +1,20 @@
 
+import ArrayUtils from '../util/ArrayUtils';
 import InputFile from '../util/InputFile';
 
 const data = InputFile
 	.readLineGroupsForDay(5)
-	.toArray()
-	.toPair();
-
-const stacks = data.first
-	.select(line => line.split(''))
-	.select(chars => chars.filter((_c, index) => (index - 1) % 4 === 0))
-	.select(crates => crates.withIndex())
-	.selectMany(crates => crates.filter(({ item }) => item.match(/\w/)))
-	.groupBy(({ index }) => index)
-	.orderBy(group => group.first().index)
-	.select(group => group.reverse())
-	.select(group => group.select(({ item }) => item))
-	.select(group => group.toArray())
 	.toArray();
+const letters = data.get(0)
+	.reverse()
+	.skip(1)
+	.select(line => line.split(''));
+const stacks = ArrayUtils
+	.transpose(letters.toArray(), ' ')
+	.filter((_, index) => (index - 1) % 4 === 0)
+	.map(chars => chars.filter(c => c != ' '));
 
-data.second
+data.get(1)
 	.select(line => /^move (\d+) from (\d+) to (\d+)$/.exec(line))
 	.select(match => (match as string[]).slice(1, 4))
 	.select(a => a.toIntArray())
