@@ -35,9 +35,9 @@ InputFile
 				const bigDiffX = Math.abs(diffX) > 1;
 				const bigDiffY = Math.abs(diffY) > 1;
 				const moveDiagonal = !sameRow && !sameColumn && (bigDiffX || bigDiffY);
-				if (sameRow && bigDiffX || moveDiagonal)
+				if ((sameRow && bigDiffX) || moveDiagonal)
 					second[0] += (diffX > 0) ? 1 : -1;
-				if (sameColumn && bigDiffY || moveDiagonal)
+				if ((sameColumn && bigDiffY) || moveDiagonal)
 					second[1] += (diffY > 0) ? 1 : -1;
 				knotPositions[i+1] = second;
 			}
