@@ -8,8 +8,8 @@ const stack = [fs.rootNode];
 InputFile
 	.readLinesForDay(7)
 	.forEach(line => {
-		const cd = line.match(/^\$ cd (.*)$/) as string[];
-		const size = line.match(/^(\d+) (.*)$/) as string[];
+		const cd = line.match(/^\$ cd (.*)$/);
+		const size = line.match(/^(\d+) (.*)$/);
 
 		if (cd && cd.get(1) === '..')
 			stack.pop();
