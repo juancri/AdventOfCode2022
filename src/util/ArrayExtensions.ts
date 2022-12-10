@@ -13,6 +13,7 @@ declare global {
 		min(selector?: (element: T) => number): number;
 		max(selector?: (element: T) => number): number;
 		pairWindows(): Pair<T>[];
+		skipFirst(): T[];
 		skipLast(): T[];
 		spliceFromLast(count: number): T[];
 		takeUntilIncluding(predicate: (element: T, index: number) => boolean): IEnumerable<T>
@@ -121,6 +122,11 @@ Array.prototype.toIntArray = function()
 Array.prototype.toPair = function()
 {
 	return Pair.fromArray(this);
+}
+
+Array.prototype.skipFirst = function()
+{
+	return this.slice(1);
 }
 
 Array.prototype.skipLast = function()
