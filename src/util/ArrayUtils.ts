@@ -1,6 +1,13 @@
 
 export default class ArrayUtils
 {
+	public static create<T>(size: number, value: T): T[]
+	{
+		return Array(size)
+			.fill(null)
+			.map(() => value);
+	}
+
 	public static createWith<T>(size: number, getValue: () => T): T[]
 	{
 		return Array(size)
