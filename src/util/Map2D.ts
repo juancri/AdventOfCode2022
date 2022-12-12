@@ -39,6 +39,11 @@ export default class Map2D<T>
 		this.maxY = values.length - 1;
 	}
 
+	public containsPosition(x: number, y: number): boolean
+	{
+		return x >= 0 && x <= this.maxX && y >= 0 && y <= this.maxY;
+	}
+
 	public get(x: number, y: number): T
 	{
 		const found = this.map.get(Map2D.createMapKey(x, y));
@@ -83,6 +88,30 @@ export default class Map2D<T>
 	{
 		return Enumerable.from(
 			this.getValuesWithinLimits(entry.x, entry.x, entry.y + 1, this.maxY));
+	}
+
+	public indexOf(value: T): [number, number] | null
+	{
+		for (let x = 0; x <= this.maxX; x++)
+			for (let y = 0; y <= this.maxY; y++)
+				if (this.get(x, y) === value)
+					return [x, y];
+		return null;
+	}
+
+	public indexOfOrError(value: T): [number, number]
+	{
+		const found = this.indexOf(value);
+		if (!found)
+			throw new Error(`No index found for value: ${value}`);
+		return found;
+	}
+
+	public static fromChars(input: IEnumerable<string>): Map2D<string>
+	{
+		return new Map2D(input
+			.select(line => line.split(''))
+			.toArray());
 	}
 
 	public static fromDigits(input: IEnumerable<string>): Map2D<number>

@@ -23,6 +23,11 @@ export default class InputFile
 		return input.split('');
 	}
 
+	public static readCharsMapForDay(day: number): Map2D<string>
+	{
+		return Map2D.fromChars(this.readLinesForDay(day, true));
+	}
+
 	public static readDigitsMapForDay(day: number): Map2D<number>
 	{
 		return Map2D.fromDigits(this.readLinesForDay(day, true));
