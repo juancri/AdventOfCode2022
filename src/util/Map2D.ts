@@ -47,6 +47,11 @@ export default class Map2D<T>
 		return x >= 0 && x <= this.maxX && y >= 0 && y <= this.maxY;
 	}
 
+	public count(): number
+	{
+		return this.map.size;
+	}
+
 	public get(x: number, y: number): T
 	{
 		const found = this.map.get(Map2D.createMapKey(x, y));
