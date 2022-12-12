@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "handlebars": "^4.7.7",
+    "js-graph-algorithms": "^1.0.18",
     "linq": "^3.2.4"
   }
 }
