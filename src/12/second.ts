@@ -1,9 +1,9 @@
 
-import jsGraphs from 'js-graph-algorithms';
+import { WeightedDiGraph, Edge, Dijkstra } from 'js-graph-algorithms';
 import InputFile from '../util/InputFile';
 
 const map = InputFile.readCharsMapForDay(12);
-const graph = new jsGraphs.WeightedDiGraph((map.maxX + 1) * (map.maxY + 1));
+const graph = new WeightedDiGraph(map.count());
 const getGraphIndex = (x: number, y: number) => ((map.maxX + 1) * y) + x;
 
 map
@@ -15,16 +15,14 @@ map
 		const code2 = second.value.replace('E', 'z').charCodeAt(0);
 		return code2 - code <= 1;
 	})
-	.forEach(({ first, second }) => {
-		const index = getGraphIndex(first.x, first.y);
-		const index2 = getGraphIndex(second.x, second.y);
-		graph.addEdge(new jsGraphs.Edge(index, index2, 1));
-	});
+	.forEach(({ first, second }) => graph.addEdge(new Edge(
+		getGraphIndex(first.x, first.y),
+		getGraphIndex(second.x, second.y), 1)));
 
 const endIndex = getGraphIndex(...map.indexOfOrError('E'));
 console.log(map
 	.indexesOf('a')
-	.select(([ x, y ]) => getGraphIndex(x, y))
-	.select(index => new jsGraphs.Dijkstra(graph, index))
+	.select(index => new Dijkstra(graph, getGraphIndex(...index)))
 	.where(dijkstra => dijkstra.hasPathTo(endIndex))
-	.min(dijkstra => dijkstra.pathTo(endIndex).length));
+	.select(dijkstra => dijkstra.pathTo(endIndex))
+	.min(path => path.length));

@@ -1,9 +1,9 @@
 
-import jsGraphs from 'js-graph-algorithms';
+import { WeightedDiGraph, Edge, Dijkstra } from 'js-graph-algorithms';
 import InputFile from '../util/InputFile';
 
 const map = InputFile.readCharsMapForDay(12);
-const graph = new jsGraphs.WeightedDiGraph((map.maxX + 1) * (map.maxY + 1));
+const graph = new WeightedDiGraph(map.count());
 const getGraphIndex = (x: number, y: number) => ((map.maxX + 1) * y) + x;
 
 map
@@ -15,14 +15,12 @@ map
 		const code2 = second.value.replace('E', 'z').charCodeAt(0);
 		return code2 - code <= 1;
 	})
-	.forEach(({ first, second }) => {
-		const index = getGraphIndex(first.x, first.y);
-		const index2 = getGraphIndex(second.x, second.y);
-		graph.addEdge(new jsGraphs.Edge(index, index2, 1));
-	});
+	.forEach(({ first, second }) => graph.addEdge(new Edge(
+		getGraphIndex(first.x, first.y),
+		getGraphIndex(second.x, second.y), 1)));
 
 const startPos = map.indexOfOrError('S');
 const endPos = map.indexOfOrError('E');
-const dijkstra = new jsGraphs.Dijkstra(graph, getGraphIndex(...startPos));
+const dijkstra = new Dijkstra(graph, getGraphIndex(...startPos));
 const path = dijkstra.pathTo(getGraphIndex(...endPos));
 console.log(path.length);
