@@ -3,6 +3,8 @@ import Enumerable, { IEnumerable } from "linq";
 const MAP_KEY_REGEX = /^(\d+)_(\d+)$/;
 const CHECK_MIN = (val: number, min: number, _max: number) => val >= min;
 const CHECK_MAX = (val: number, _min: number, max: number) => val <= max;
+const DIRECTIONS = Enumerable.from([
+	[-1, 0], [1, 0], [0, -1], [0, 1]] as [number, number][]);
 
 export interface Entry2D<T>
 {
@@ -16,6 +18,7 @@ export interface ActionableEntry2D<T> extends Entry2D<T>
 	getValuesRight(): IEnumerable<T>;
 	getValuesUp(): IEnumerable<T>;
 	getValuesDown(): IEnumerable<T>;
+	getAdjacentEntries(): IEnumerable<Entry2D<T>>;
 };
 
 export default class Map2D<T>
@@ -52,6 +55,11 @@ export default class Map2D<T>
 		return found;
 	}
 
+	public set(x: number, y: number, value: T): void
+	{
+		this.map.set(Map2D.createMapKey(x, y), value);
+	}
+
 	public getActionableEntries(): IEnumerable<ActionableEntry2D<T>>
 	{
 		return this
@@ -59,11 +67,26 @@ export default class Map2D<T>
 			.select(entry => this.createActionableEntry(entry));
 	}
 
+	public getAdjacentEntries(entry: Entry2D<T>): IEnumerable<Entry2D<T>>
+	{
+		return DIRECTIONS
+			.select(dir => [entry.x + dir[0], entry.y + dir[1]].toPair())
+			.where(pair => pair.first >= 0 && pair.first <= this.maxX)
+			.where(pair => pair.second >= 0 && pair.second <= this.maxY)
+			.select(pair => this.getEntry(pair.first, pair.second));
+	}
+
 	public getEntries(): IEnumerable<Entry2D<T>>
 	{
 		return Enumerable
 			.from(this.map.entries())
 			.select(item => Map2D.mapEntryToEntry2D(item));
+	}
+
+	public getEntry(x: number, y: number): Entry2D<T>
+	{
+		const value = this.get(x, y);
+		return { x, y, value };
 	}
 
 	public getValuesLeftOf(entry: Entry2D<T>): IEnumerable<T>
@@ -107,6 +130,11 @@ export default class Map2D<T>
 		return found;
 	}
 
+	public indexesOf(value: T): IEnumerable<[number, number]>
+	{
+		return Enumerable.from(this.indexesOfInternal(value));
+	}
+
 	public static fromChars(input: IEnumerable<string>): Map2D<string>
 	{
 		return new Map2D(input
@@ -129,7 +157,8 @@ export default class Map2D<T>
 			getValuesLeft: () => this.getValuesLeftOf(entry),
 			getValuesRight: () => this.getValuesRightOf(entry),
 			getValuesUp: () => this.getValuesUpOf(entry),
-			getValuesDown: () => this.getValuesDownOf(entry)
+			getValuesDown: () => this.getValuesDownOf(entry),
+			getAdjacentEntries: () => this.getAdjacentEntries(entry)
 		};
 	}
 
@@ -144,6 +173,14 @@ export default class Map2D<T>
 		for (let x = startX; check(x, minX, maxX); x += step)
 			for (let y = startY; check(y, minY, maxY); y += step)
 				yield this.get(x, y);
+	}
+
+	private *indexesOfInternal(value: T): Generator<[number, number]>
+	{
+		for (let x = 0; x <= this.maxX; x++)
+			for (let y = 0; y <= this.maxY; y++)
+				if (this.get(x, y) === value)
+					yield [x, y];
 	}
 
 	private static createMapKey(x: number, y: number): string
