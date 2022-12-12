@@ -4,7 +4,7 @@ import InputFile from '../util/InputFile';
 
 const map = InputFile.readCharsMapForDay(12);
 const graph = new WeightedDiGraph(map.count());
-const getGraphIndex = (x: number, y: number) => ((map.maxX + 1) * y) + x;
+const getIndex = (x: number, y: number) => (map.maxX + 1) * y + x;
 
 map
 	.getActionableEntries()
@@ -16,13 +16,11 @@ map
 		return code2 - code <= 1;
 	})
 	.forEach(({ first, second }) => graph.addEdge(new Edge(
-		getGraphIndex(first.x, first.y),
-		getGraphIndex(second.x, second.y), 1)));
+		getIndex(first.x, first.y),
+		getIndex(second.x, second.y), 1)));
 
-const endIndex = getGraphIndex(...map.indexOfOrError('E'));
+const endIndex = getIndex(...map.indexOfOrError('E'));
 console.log(map
 	.indexesOf('a')
-	.select(index => new Dijkstra(graph, getGraphIndex(...index)))
-	.where(dijkstra => dijkstra.hasPathTo(endIndex))
-	.select(dijkstra => dijkstra.pathTo(endIndex))
-	.min(path => path.length));
+	.select(index => new Dijkstra(graph, getIndex(...index)))
+	.min(dijkstra => dijkstra.distanceTo(endIndex)));
