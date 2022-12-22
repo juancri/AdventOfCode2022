@@ -1,5 +1,6 @@
 
 import Enumerable, { IEnumerable } from 'linq';
+import IndexedItem from './IndexedItem';
 import Pair from './Pair';
 
 declare global {
@@ -21,7 +22,7 @@ declare global {
 		toIntArray(): number[];
 		toPair(): Pair<T>;
 		windows(size: number): T[][];
-		withIndex(): { item: T, index: number }[];
+		withIndex(): IndexedItem<T>[];
 	}
 }
 
@@ -144,5 +145,5 @@ Array.prototype.windows = function(size: number)
 
 Array.prototype.withIndex = function()
 {
-	return this.map((item, index) => ({ item, index }));
+	return this.map(IndexedItem.create);
 };
