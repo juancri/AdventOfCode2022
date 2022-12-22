@@ -1,3 +1,4 @@
+import { IEnumerable } from "linq";
 
 export default class Pair<T>
 {
@@ -18,5 +19,10 @@ export default class Pair<T>
 		const first = a[0] as T;
 		const second = a[1] as T;
 		return new Pair(first, second);
+	}
+
+	public static fromEnumerable<T>(e: IEnumerable<T>): Pair<T>
+	{
+		return Pair.fromArray(e.toArray());
 	}
 }
