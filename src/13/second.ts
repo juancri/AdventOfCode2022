@@ -86,6 +86,6 @@ console.log(InputFile
 	.concat(DIVIDER_PACKETS)
 	.orderBy(packet => packet, comparePackets)
 	.select(IndexedItem.create)
-	.where(x => DIVIDER_PACKETS.includes(x.item))
-	.select(x => x.index + 1)
+	.where(({ item }) => DIVIDER_PACKETS.includes(item))
+	.select(({ index }) => index + 1)
 	.aggregate((a, b) => a * b));

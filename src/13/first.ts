@@ -80,4 +80,4 @@ console.log(InputFile
 	.select(Pair.fromEnumerable)
 	.select(IndexedItem.create)
 	.where(({ item }) => !!packetsInOrder(item.first, item.second))
-	.sum(x => x.index + 1));
+	.sum(({ index }) => index + 1));
