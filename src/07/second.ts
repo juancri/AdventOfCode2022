@@ -1,9 +1,9 @@
 
-import Graph from '../util/Graph';
 import InputFile from '../util/InputFile';
+import Tree from '../util/Tree';
 
-const fs = new Graph<[string, number]>([ '/', 0 ]);
-const stack = [fs.rootNode];
+const fs = new Tree<[string, number]>([ '/', 0 ]);
+const stack = [fs.root];
 
 InputFile
 	.readLinesForDay(7)

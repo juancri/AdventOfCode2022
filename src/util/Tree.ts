@@ -50,26 +50,26 @@ export class Node<T>
 	}
 }
 
-export default class Graph<T>
+export default class Tree<T>
 {
-	public readonly rootNode: Node<T>;
+	public readonly root: Node<T>;
 
-	public constructor(rootVale: T)
+	public constructor(rootVal: T)
 	{
-		this.rootNode = new Node(rootVale);
+		this.root = new Node(rootVal);
 	}
 
 	public getAllNodes(): IEnumerable<Node<T>>
 	{
 		return Enumerable
-			.from([this.rootNode])
-			.concat(this.rootNode.getChildrenNodesRecursive());
+			.from([this.root])
+			.concat(this.root.getChildrenNodesRecursive());
 	}
 
 	public getAllValues(): IEnumerable<T>
 	{
 		return Enumerable
-			.from([this.rootNode.value])
-			.concat(this.rootNode.getChildrenValuesRecursive());
+			.from([this.root.value])
+			.concat(this.root.getChildrenValuesRecursive());
 	}
 }
