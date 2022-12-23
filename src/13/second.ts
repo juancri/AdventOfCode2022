@@ -81,7 +81,6 @@ function comparePackets(left: Packet, right: Packet): number
 
 console.log(InputFile
 	.readLinesForDay(13)
-	// FIXME: Create a parser
 	.select(StringReader.create)
 	.select(parsePacket)
 	.concat(DIVIDER_PACKETS)
