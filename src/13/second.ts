@@ -1,10 +1,53 @@
 
 import IndexedItem from '../util/IndexedItem';
 import InputFile from '../util/InputFile';
+import StringReader from '../util/StringReader';
 
 type Packet = number | Packet[];
 
 const DIVIDER_PACKETS: Packet[] = [[[2]], [[6]]];
+
+function parsePacket(reader: StringReader): Packet
+{
+	const char = reader.next();
+	if (char === null)
+		throw new Error('Unexpected end of input. Packet expected.');
+
+	if (char.match(/\d/))
+	{
+		let numberInput = char;
+		while (reader.peek()?.match(/\d/))
+			numberInput += reader.next();
+		return parseInt(numberInput);
+	}
+
+	if (char === '[')
+	{
+		if (reader.peek() === ']')
+		{
+			reader.next();
+			return [];
+		}
+
+		const items: Packet = [];
+		while (true)
+		{
+			items.push(parsePacket(reader));
+
+			const next = reader.next();
+			if (next === ']')
+				break;
+			if (next === ',')
+				continue;
+
+			throw new Error(`Unexpected input. Expected , or ]. Got: "${next}".`);
+		}
+
+		return items;
+	}
+
+	throw new Error(`Cannot parse input. Expected packet. Got: ${char}. Input: ${reader.input}. Pos: ${reader.pos}.`);
+}
 
 function comparePackets(left: Packet, right: Packet): number
 {
@@ -39,7 +82,8 @@ function comparePackets(left: Packet, right: Packet): number
 console.log(InputFile
 	.readLinesForDay(13)
 	// FIXME: Create a parser
-	.select(line => eval(line) as Packet)
+	.select(StringReader.create)
+	.select(parsePacket)
 	.concat(DIVIDER_PACKETS)
 	.orderBy(packet => packet, comparePackets)
 	.select(IndexedItem.create)
