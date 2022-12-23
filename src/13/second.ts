@@ -1,61 +1,48 @@
 
 import IndexedItem from '../util/IndexedItem';
 import InputFile from '../util/InputFile';
-import Pair from '../util/Pair';
 
 type Packet = number | Packet[];
 
-enum OrderResult
-{
-	True,
-	False,
-	Continue
-}
+const DIVIDER_PACKETS: Packet[] = [[[2]], [[6]]];
 
-function convertToList(packet: Packet): Packet[]
+function comparePackets(left: Packet, right: Packet): number
 {
-	return typeof packet === 'number' ? [packet] : packet;
-}
-
-function packetsInOrder(left: Packet, right: Packet): OrderResult
-{
-	const leftIsNumber = typeof left === 'number';
-	const rightIsNumber = typeof right === 'number';
-	if (leftIsNumber && rightIsNumber)
+	if (typeof left === 'number' && typeof right === 'number')
 	{
 		if (left === right)
-			return OrderResult.Continue;
-
-		return left < right ?
-			OrderResult.True :
-			OrderResult.False;
+			return 0;
+		return left < right ? -1 : 1;
 	}
 
-	if (leftIsNumber || rightIsNumber)
-		return packetsInOrder(convertToList(left), convertToList(right));
+	if (typeof left === 'number')
+		return comparePackets([left], right);
+	if (typeof right === 'number')
+		return comparePackets(left, [right]);
 
-	const max = Math.max(left.length, right.length);
-	for (let i = 0; i < max; i++)
+	for (let i = 0; i < Math.max(left.length, right.length); i++)
 	{
 		if (left.length === i)
-			return OrderResult.True;
+			return -1;
 
 		if (right.length === i)
-			return OrderResult.False;
+			return 1;
 
-		const res = packetsInOrder(left.get(i), right.get(i));
-		if (res !== OrderResult.Continue)
+		const res = comparePackets(left.get(i), right.get(i));
+		if (res !== 0)
 			return res;
 	}
 
-	return OrderResult.Continue;
+	return 0;
 }
 
 console.log(InputFile
-	.readLineGroupsForDay(13)
+	.readLinesForDay(13)
 	// FIXME: Create a parser
-	.select(group => group.select(packet => eval(packet) as Packet))
-	.select(Pair.fromEnumerable)
+	.select(line => eval(line) as Packet)
+	.concat(DIVIDER_PACKETS)
+	.orderBy(packet => packet, comparePackets)
 	.select(IndexedItem.create)
-	.where(({ item }) => packetsInOrder(item.first, item.second) === OrderResult.True)
-	.sum(x => x.index + 1));
+	.where(x => DIVIDER_PACKETS.includes(x.item))
+	.select(x => x.index + 1)
+	.aggregate((a, b) => a * b));

@@ -5,50 +5,29 @@ import Pair from '../util/Pair';
 
 type Packet = number | Packet[];
 
-enum OrderResult
+function packetsInOrder(left: Packet, right: Packet): boolean | null
 {
-	True,
-	False,
-	Continue
-}
+	if (typeof left === 'number' && typeof right === 'number')
+		return left === right ? null : (left < right);
+	if (typeof left === 'number')
+		return packetsInOrder([left], right);
+	if (typeof right === 'number')
+		return packetsInOrder(left, [right]);
 
-function convertToList(packet: Packet): Packet[]
-{
-	return typeof packet === 'number' ? [packet] : packet;
-}
-
-function packetsInOrder(left: Packet, right: Packet): OrderResult
-{
-	const leftIsNumber = typeof left === 'number';
-	const rightIsNumber = typeof right === 'number';
-	if (leftIsNumber && rightIsNumber)
-	{
-		if (left === right)
-			return OrderResult.Continue;
-
-		return left < right ?
-			OrderResult.True :
-			OrderResult.False;
-	}
-
-	if (leftIsNumber || rightIsNumber)
-		return packetsInOrder(convertToList(left), convertToList(right));
-
-	const max = Math.max(left.length, right.length);
-	for (let i = 0; i < max; i++)
+	for (let i = 0; i < Math.max(left.length, right.length); i++)
 	{
 		if (left.length === i)
-			return OrderResult.True;
+			return true;
 
 		if (right.length === i)
-			return OrderResult.False;
+			return false;
 
 		const res = packetsInOrder(left.get(i), right.get(i));
-		if (res !== OrderResult.Continue)
+		if (res !== null)
 			return res;
 	}
 
-	return OrderResult.Continue;
+	return null;
 }
 
 console.log(InputFile
@@ -57,5 +36,5 @@ console.log(InputFile
 	.select(group => group.select(packet => eval(packet) as Packet))
 	.select(Pair.fromEnumerable)
 	.select(IndexedItem.create)
-	.where(({ item }) => packetsInOrder(item.first, item.second) === OrderResult.True)
+	.where(({ item }) => !!packetsInOrder(item.first, item.second))
 	.sum(x => x.index + 1));
