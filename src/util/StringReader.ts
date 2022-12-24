@@ -17,12 +17,23 @@ export default class StringReader
 			this.input.at(this.pos++) as string;
 	}
 
-	public nextCheck(): string
+	public nextCheck(...values: (string | RegExp)[]): string
 	{
 		const next = this.next();
 		if (next === null)
 			throw new Error(`Reached the end of the string. Expected a character.`);
-		return next;
+		if (values.length === 0)
+			return next;
+
+		for (const value of values)
+		{
+			if (typeof value === 'string' && value === next)
+				return next;
+			if (next.match(value))
+				return next;
+		}
+
+		throw new Error(`Next value "${next}" does not matches any of the values provided`);
 	}
 
 	public peek(): string | null
