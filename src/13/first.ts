@@ -10,15 +10,12 @@ function parsePacket(reader: StringReader): Packet
 {
 	if (reader.peek()?.match(/\d/))
 		return parseInt(reader.readWhileMatches(/\d/));
+
 	reader.nextCheck('[');
+	if (reader.nextIf(']'))
+		return [];
 
 	const items: Packet = [];
-	if (reader.peek() === ']')
-	{
-		reader.next();
-		return items;
-	}
-
 	while (true)
 	{
 		items.push(parsePacket(reader));
