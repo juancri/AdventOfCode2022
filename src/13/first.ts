@@ -10,8 +10,7 @@ function parsePacket(reader: StringReader): Packet
 {
 	if (reader.peek()?.match(/\d/))
 		return parseInt(reader.readWhileMatches(/\d/));
-	if (reader.nextCheck() !== '[')
-		throw new Error(`Cannot parse input. Expected packet. Input: ${reader.input}. Pos: ${reader.pos}.`);
+	reader.nextCheck('[');
 
 	const items: Packet = [];
 	if (reader.peek() === ']')
@@ -19,15 +18,12 @@ function parsePacket(reader: StringReader): Packet
 		reader.next();
 		return items;
 	}
-	else while (true)
+
+	while (true)
 	{
 		items.push(parsePacket(reader));
-
-		const next = reader.next();
-		if (next === ']')
+		if (reader.nextCheck(']', ',') === ']')
 			return items;
-		if (next !== ',')
-			throw new Error(`Unexpected input. Expected , or ]. Got: "${next}".`);
 	}
 }
 
