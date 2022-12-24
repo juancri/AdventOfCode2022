@@ -53,8 +53,7 @@ function comparePackets(left: Packet, right: Packet): number
 
 console.log(InputFile
 	.readLinesForDay(13)
-	.select(StringReader.create)
-	.select(parsePacket)
+	.select(line => parsePacket(new StringReader(line)))
 	.concat(DIVIDER_PACKETS)
 	.orderBy(packet => packet, comparePackets)
 	.select(IndexedItem.create)

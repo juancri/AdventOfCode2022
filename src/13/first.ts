@@ -39,7 +39,6 @@ function comparePackets(left: Packet, right: Packet): number
 	{
 		if (left.length === i)
 			return -1;
-
 		if (right.length === i)
 			return 1;
 
