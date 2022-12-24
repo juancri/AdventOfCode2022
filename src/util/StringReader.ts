@@ -17,6 +17,15 @@ export default class StringReader
 			this.input.at(this.pos++) as string;
 	}
 
+	public nextIf(value: string): boolean
+	{
+		if (this.peek() !== value)
+			return false;
+
+		this.next();
+		return true;
+	}
+
 	public nextCheck(...values: (string | RegExp)[]): string
 	{
 		const next = this.next();
