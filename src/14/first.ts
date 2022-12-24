@@ -3,6 +3,8 @@ import Enumerable from 'linq';
 import InputFile from '../util/InputFile';
 import Pair from '../util/Pair';
 
+interface Point { x: number, y: number }
+
 const points = InputFile
 	.readLinesForDay(14)
 	.select(line => line.split(' -> '))
@@ -19,13 +21,45 @@ const points = InputFile
 	.distinct(p => (p.x << 16) + p.y)
 	.toArray();
 
-const maxY = points.max(p => p.y);
-
-let count = 0;
-while (++count)
+function findNextPosition(point: Point, correction: number): Point | null
 {
-	let pos = { x: 500, y: 0 };
+	const found = Enumerable
+		.from(points)
+		.where(p => p.x === point.x + correction)
+		.where(p => p.y > point.y)
+		.orderBy(p => p.y)
+		.firstOrDefault();
+	if (!found)
+		return null;
 
+	return { x: found.x, y: found.y - 1};
 }
 
-console.log(points, maxY);
+const maxY = points.max(p => p.y);
+let sandCount = 0;
+
+while (true)
+{
+	sandCount++;
+	let sandPos = { x: 500, y: 0 };
+
+	while (true)
+	{
+		// Next point down
+		const nextDown =
+			findNextPosition(sandPos, 0) ||
+			findNextPosition(sandPos, -1) ||
+			findNextPosition(sandPos, 1);
+
+		if (nextDown === null)
+		{
+			// Add
+			points.push(sandPos);
+			break;
+		}
+
+		sandPos = nextDown;
+	}
+}
+
+console.log(maxY, sandCount);
