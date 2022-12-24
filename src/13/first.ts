@@ -8,69 +8,54 @@ type Packet = number | Packet[];
 
 function parsePacket(reader: StringReader): Packet
 {
-	const char = reader.next();
-	if (char === null)
-		throw new Error('Unexpected end of input. Packet expected.');
+	if (reader.peek()?.match(/\d/))
+		return parseInt(reader.readWhileMatches(/\d/));
+	if (reader.nextCheck() !== '[')
+		throw new Error(`Cannot parse input. Expected packet. Input: ${reader.input}. Pos: ${reader.pos}.`);
 
-	if (char.match(/\d/))
+	const items: Packet = [];
+	if (reader.peek() === ']')
 	{
-		let numberInput = char;
-		while (reader.peek()?.match(/\d/))
-			numberInput += reader.next();
-		return parseInt(numberInput);
-	}
-
-	if (char === '[')
-	{
-		if (reader.peek() === ']')
-		{
-			reader.next();
-			return [];
-		}
-
-		const items: Packet = [];
-		while (true)
-		{
-			items.push(parsePacket(reader));
-
-			const next = reader.next();
-			if (next === ']')
-				break;
-			if (next === ',')
-				continue;
-
-			throw new Error(`Unexpected input. Expected , or ]. Got: "${next}".`);
-		}
-
+		reader.next();
 		return items;
 	}
+	else while (true)
+	{
+		items.push(parsePacket(reader));
 
-	throw new Error(`Cannot parse input. Expected packet. Got: ${char}. Input: ${reader.input}. Pos: ${reader.pos}.`);
+		const next = reader.next();
+		if (next === ']')
+			return items;
+		if (next !== ',')
+			throw new Error(`Unexpected input. Expected , or ]. Got: "${next}".`);
+	}
 }
 
-function packetsInOrder(left: Packet, right: Packet): boolean | null
+function comparePackets(left: Packet, right: Packet): number
 {
+	if (left === right)
+		return 0;
 	if (typeof left === 'number' && typeof right === 'number')
-		return left === right ? null : (left < right);
+		return left < right ? -1 : 1;
 	if (typeof left === 'number')
-		return packetsInOrder([left], right);
+		return comparePackets([left], right);
 	if (typeof right === 'number')
-		return packetsInOrder(left, [right]);
+		return comparePackets(left, [right]);
 
 	for (let i = 0; i < Math.max(left.length, right.length); i++)
 	{
 		if (left.length === i)
-			return true;
+			return -1;
 
 		if (right.length === i)
-			return false;
+			return 1;
 
-		const res = packetsInOrder(left.get(i), right.get(i));
-		if (res !== null)
+		const res = comparePackets(left.get(i), right.get(i));
+		if (res !== 0)
 			return res;
 	}
 
-	return null;
+	return 0;
 }
 
 console.log(InputFile
@@ -79,5 +64,5 @@ console.log(InputFile
 	.select(g => g.select(parsePacket))
 	.select(Pair.fromEnumerable)
 	.select(IndexedItem.create)
-	.where(({ item }) => !!packetsInOrder(item.first, item.second))
+	.where(({ item }) => comparePackets(item.first, item.second) < 0)
 	.sum(({ index }) => index + 1));

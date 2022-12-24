@@ -9,55 +9,35 @@ const DIVIDER_PACKETS: Packet[] = [[[2]], [[6]]];
 
 function parsePacket(reader: StringReader): Packet
 {
-	const char = reader.next();
-	if (char === null)
-		throw new Error('Unexpected end of input. Packet expected.');
+	if (reader.peek()?.match(/\d/))
+		return parseInt(reader.readWhileMatches(/\d/));
+	if (reader.nextCheck() !== '[')
+		throw new Error(`Cannot parse input. Expected packet. Input: ${reader.input}. Pos: ${reader.pos}.`);
 
-	if (char.match(/\d/))
+	const items: Packet = [];
+	if (reader.peek() === ']')
 	{
-		let numberInput = char;
-		while (reader.peek()?.match(/\d/))
-			numberInput += reader.next();
-		return parseInt(numberInput);
-	}
-
-	if (char === '[')
-	{
-		if (reader.peek() === ']')
-		{
-			reader.next();
-			return [];
-		}
-
-		const items: Packet = [];
-		while (true)
-		{
-			items.push(parsePacket(reader));
-
-			const next = reader.next();
-			if (next === ']')
-				break;
-			if (next === ',')
-				continue;
-
-			throw new Error(`Unexpected input. Expected , or ]. Got: "${next}".`);
-		}
-
+		reader.next();
 		return items;
 	}
+	else while (true)
+	{
+		items.push(parsePacket(reader));
 
-	throw new Error(`Cannot parse input. Expected packet. Got: ${char}. Input: ${reader.input}. Pos: ${reader.pos}.`);
+		const next = reader.next();
+		if (next === ']')
+			return items;
+		if (next !== ',')
+			throw new Error(`Unexpected input. Expected , or ]. Got: "${next}".`);
+	}
 }
 
 function comparePackets(left: Packet, right: Packet): number
 {
+	if (left === right)
+		return 0;
 	if (typeof left === 'number' && typeof right === 'number')
-	{
-		if (left === right)
-			return 0;
 		return left < right ? -1 : 1;
-	}
-
 	if (typeof left === 'number')
 		return comparePackets([left], right);
 	if (typeof right === 'number')
@@ -67,7 +47,6 @@ function comparePackets(left: Packet, right: Packet): number
 	{
 		if (left.length === i)
 			return -1;
-
 		if (right.length === i)
 			return 1;
 
