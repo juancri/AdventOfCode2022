@@ -23,42 +23,47 @@ const points = InputFile
 
 function findNextPosition(point: Point, correction: number): Point | null
 {
-	const found = Enumerable
+	return Enumerable
 		.from(points)
 		.where(p => p.x === point.x + correction)
-		.where(p => p.y > point.y)
+		.where(p => p.y >= point.y)
 		.orderBy(p => p.y)
-		.firstOrDefault();
-	if (!found)
-		return null;
-
-	return { x: found.x, y: found.y - 1};
+		.firstOrDefault() || null;
 }
 
 const maxY = points.max(p => p.y);
 let sandCount = 0;
 
-while (true)
+count: while (true)
 {
 	sandCount++;
+	console.log(`sandCount: ${sandCount}`);
 	let sandPos = { x: 500, y: 0 };
 
 	while (true)
 	{
+		console.log(`testing pos ${sandPos.x},${sandPos.y}`);
 		// Next point down
 		const nextDown =
 			findNextPosition(sandPos, 0) ||
 			findNextPosition(sandPos, -1) ||
 			findNextPosition(sandPos, 1);
+		console.log(`found next: ${nextDown?.x},${nextDown?.y}`);
 
 		if (nextDown === null)
 		{
-			// Add
+			console.log(`it's null... breaking count`);
+			break count;
+		}
+		if (nextDown.y - sandPos.y === 1)
+		{
+			console.log('diff is 1, adding to points');
 			points.push(sandPos);
 			break;
 		}
 
-		sandPos = nextDown;
+		console.log('continuing');
+		sandPos = { x: nextDown.x, y: nextDown.y - 1 };
 	}
 }
 
