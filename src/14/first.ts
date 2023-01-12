@@ -21,14 +21,14 @@ const points = InputFile
 	.distinct(p => (p.x << 16) + p.y)
 	.toArray();
 
-function findNextPosition(point: Point, correction: number): Point | null
+function findNextPosition(point: Point, correction: number): Point | undefined
 {
 	return Enumerable
 		.from(points)
 		.where(p => p.x === point.x + correction)
 		.where(p => p.y >= point.y)
 		.orderBy(p => p.y)
-		.firstOrDefault() || null;
+		.firstOrDefault();
 }
 
 const maxY = points.max(p => p.y);
@@ -50,7 +50,7 @@ count: while (true)
 			findNextPosition(sandPos, 1);
 		console.log(`found next: ${nextDown?.x},${nextDown?.y}`);
 
-		if (nextDown === null)
+		if (!nextDown)
 		{
 			console.log(`it's null... breaking count`);
 			break count;
