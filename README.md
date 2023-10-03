@@ -33,3 +33,9 @@ For example:
 ```bash
 node dist/01/first
 ```
+
+## Clean
+
+```bash
+make clean
+```
