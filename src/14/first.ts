@@ -24,47 +24,30 @@ const pointsArray = readLinesForDay(14)
 	.toArray();
 const points = new Set<number>(pointsArray.map(pointToNumber));
 const initCount = points.size;
-const maxY = Enumerable
-	.from(pointsArray)
-	.max(p => p.y);
-
-function hasDirectlyUnder(p: Point2D)
-{
-	return points.has(pointToNumber({ x: p.x, y: p.y + 1 }));
-}
-
-function hasDiagonalLeft(p: Point2D)
-{
-	return points.has(pointToNumber({ x: p.x - 1, y: p.y + 1 }));
-}
-
-function hasDiagonalRight(p: Point2D)
-{
-	return points.has(pointToNumber({ x: p.x + 1, y: p.y + 1 }));
-}
+const maxY = pointsArray.max(p => p.y);
 
 function getNextPosition(): Point2D | null
 {
 	const pos = { x: 500, y: 0 };
 	while (true)
 	{
-		if (pos.y > maxY)
+		if (pos.y >= maxY)
 			return null;
 
-		if (!hasDirectlyUnder(pos))
+		if (!points.has(pointToNumber({ x: pos.x, y: pos.y + 1 })))
 		{
 			pos.y += 1;
 			continue;
 		}
 
-		if (!hasDiagonalLeft(pos))
+		if (!points.has(pointToNumber({ x: pos.x - 1, y: pos.y + 1 })))
 		{
 			pos.x -= 1;
 			pos.y += 1;
 			continue;
 		}
 
-		if (!hasDiagonalRight(pos))
+		if (!points.has(pointToNumber({ x: pos.x + 1, y: pos.y + 1 })))
 		{
 			pos.x += 1;
 			pos.y += 1;
