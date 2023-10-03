@@ -11,7 +11,7 @@ export interface Entry2D<T>
 	x: number;
 	y: number;
 	value: T;
-};
+}
 export interface ActionableEntry2D<T> extends Entry2D<T>
 {
 	getValuesLeft(): IEnumerable<T>;
@@ -19,7 +19,7 @@ export interface ActionableEntry2D<T> extends Entry2D<T>
 	getValuesUp(): IEnumerable<T>;
 	getValuesDown(): IEnumerable<T>;
 	getAdjacentEntries(): IEnumerable<Entry2D<T>>;
-};
+}
 
 export default class Map2D<T>
 {
