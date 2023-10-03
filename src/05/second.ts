@@ -1,9 +1,8 @@
 
 import { transpose } from '../util/array';
-import InputFile from '../util/InputFile';
+import { readLineGroupsForDay } from '../util/InputFile';
 
-const data = InputFile
-	.readLineGroupsForDay(5)
+const data = readLineGroupsForDay(5)
 	.toArray();
 const letters = data.get(0)
 	.reverse()

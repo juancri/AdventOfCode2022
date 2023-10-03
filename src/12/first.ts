@@ -1,8 +1,8 @@
 
 import { WeightedDiGraph, Edge, Dijkstra } from 'js-graph-algorithms';
-import InputFile from '../util/InputFile';
+import { readCharsMapForDay } from '../util/InputFile';
 
-const map = InputFile.readCharsMapForDay(12);
+const map = readCharsMapForDay(12);
 const graph = new WeightedDiGraph(map.count());
 const getIndex = (x: number, y: number) => (map.maxX + 1) * y + x;
 

@@ -1,10 +1,9 @@
 
 import '../util/ArrayExtensions';
 import { getRepeatedItems } from '../util/array';
-import InputFile from '../util/InputFile';
+import { readLinesForDay } from '../util/InputFile';
 
-console.log(InputFile
-	.readLinesForDay(3)
+console.log(readLinesForDay(3)
 	.select(line => line.split(''))
 	.buffer(3)
 	.select(getRepeatedItems)

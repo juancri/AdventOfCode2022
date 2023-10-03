@@ -1,15 +1,14 @@
 
 import '../util/RegExpExtensions';
 import '../util/StringExtensions';
-import InputFile from '../util/InputFile';
+import { readLineGroupsForDay } from '../util/InputFile';
 import RequireKeyMap from '../util/RequireKeyMap';
 
 const ops = new RequireKeyMap([
 	['+', (a: number, b: number) => a + b],
 	['*', (a: number, b: number) => a * b]
 ]);
-const monkeys = InputFile
-	.readLineGroupsForDay(11)
+const monkeys = readLineGroupsForDay(11)
 	.select(g => g.toArray())
 	.select(g => ({
 		items: g.get(1).after(':')
@@ -39,7 +38,7 @@ for (let round = 1; round <= 20; round++)
 		m.inspected += m.items.length;
 		m.items = [];
 	});
-};
+}
 
 console.log(monkeys
 	.toEnumerable()

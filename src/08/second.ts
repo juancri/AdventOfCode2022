@@ -1,8 +1,7 @@
 
-import InputFile from '../util/InputFile';
+import { readDigitsMapForDay } from '../util/InputFile';
 
-console.log(InputFile
-	.readDigitsMapForDay(8)
+console.log(readDigitsMapForDay(8)
 	.getActionableEntries()
 	.max(t =>
 		t.getValuesLeft()

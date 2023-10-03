@@ -1,8 +1,7 @@
 
-import InputFile from '../util/InputFile';
+import { readIntGroupsForDay } from '../util/InputFile';
 
-console.log(InputFile
-	.readIntGroupsForDay(1)
+console.log(readIntGroupsForDay(1)
 	.select(group => group.sum())
 	.orderByDescending(x => x)
 	.take(3)

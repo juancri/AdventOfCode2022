@@ -1,10 +1,9 @@
 
-import InputFile from '../util/InputFile';
+import { readLinesForDay } from '../util/InputFile';
 import Pair from '../util/Pair';
 import Segment from '../util/Segment';
 
-console.log(InputFile
-	.readLinesForDay(4)
+console.log(readLinesForDay(4)
 	.select(line => line.split(','))
 	.select(segments => segments.map(s => s.split('-')))
 	.select(segments => segments.map(s => s.toIntArray()))

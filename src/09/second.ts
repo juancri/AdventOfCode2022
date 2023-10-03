@@ -1,6 +1,6 @@
 
 import { create, createWith } from '../util/array';
-import InputFile from '../util/InputFile';
+import { readLinesForDay } from '../util/InputFile';
 import RequireKeyMap from '../util/RequireKeyMap';
 
 interface Coords { x: number, y: number }
@@ -14,8 +14,7 @@ const MOVE = new RequireKeyMap<string, (c: Coords) => Coords> ([
 const visited = new Set(['0_0']);
 const knots = createWith(10, () => ({ x: 0, y: 0 }));
 
-InputFile
-	.readLinesForDay(9)
+readLinesForDay(9)
 	.select(line => line.split(' ') as [string, string])
 	.selectMany(([c, n]) => create(parseInt(n), MOVE.get(c)))
 	.forEach(command =>

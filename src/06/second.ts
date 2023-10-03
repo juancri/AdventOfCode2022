@@ -1,9 +1,8 @@
 
 import '../util/ArrayExtensions';
-import InputFile from '../util/InputFile';
+import { readCharsForDay } from '../util/InputFile';
 
-console.log(InputFile
-	.readCharsForDay(6)
+console.log(readCharsForDay(6)
 	.windows(14)
 	.withIndex()
 	.filter(x => x.item.countDistinct() === 14)

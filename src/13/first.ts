@@ -1,6 +1,6 @@
 
 import IndexedItem from '../util/IndexedItem';
-import InputFile from '../util/InputFile';
+import { readLineGroupsForDay } from '../util/InputFile';
 import Pair from '../util/Pair';
 import StringReader from '../util/StringReader';
 
@@ -50,8 +50,7 @@ function comparePackets(left: Packet, right: Packet): number
 	return 0;
 }
 
-console.log(InputFile
-	.readLineGroupsForDay(13)
+console.log(readLineGroupsForDay(13)
 	.select(g => g.select(StringReader.create))
 	.select(g => g.select(parsePacket))
 	.select(Pair.fromEnumerable)

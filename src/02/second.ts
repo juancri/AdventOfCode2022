@@ -1,5 +1,5 @@
 
-import InputFile from '../util/InputFile';
+import { readLinesForDay } from '../util/InputFile';
 import RequireKeyMap from '../util/RequireKeyMap';
 
 const moves = new RequireKeyMap([
@@ -13,6 +13,5 @@ const moves = new RequireKeyMap([
 	['C Y', 3 + 3],
 	['C Z', 1 + 6]
 ]);
-console.log(InputFile
-	.readLinesForDay(2)
+console.log(readLinesForDay(2)
 	.sum(line => moves.get(line)));

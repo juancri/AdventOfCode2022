@@ -1,6 +1,5 @@
 
-import InputFile from '../util/InputFile';
+import { readIntGroupsForDay } from '../util/InputFile';
 
-console.log(InputFile
-	.readIntGroupsForDay(1)
+console.log(readIntGroupsForDay(1)
 	.max(group => group.sum()));

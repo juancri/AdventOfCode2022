@@ -1,6 +1,6 @@
 
 import IndexedItem from '../util/IndexedItem';
-import InputFile from '../util/InputFile';
+import { readLinesForDay } from '../util/InputFile';
 import StringReader from '../util/StringReader';
 
 type Packet = number | Packet[];
@@ -51,8 +51,7 @@ function comparePackets(left: Packet, right: Packet): number
 	return 0;
 }
 
-console.log(InputFile
-	.readLinesForDay(13)
+console.log(readLinesForDay(13)
 	.select(line => parsePacket(new StringReader(line)))
 	.concat(DIVIDER_PACKETS)
 	.orderBy(packet => packet, comparePackets)
