@@ -1,0 +1,10 @@
+
+@test "{{ formattedNumber }}/first" {
+  result="$(node dist/{{ formattedNumber }}/first)"
+  [ "$result" = "$(cat tests/{{ formattedNumber }}/first.txt)" ]
+}
+
+@test "{{ formattedNumber }}/second" {
+  result="$(node dist/{{ formattedNumber }}/second)"
+  [ "$result" = "$(cat tests/{{ formattedNumber }}/second.txt)" ]
+}

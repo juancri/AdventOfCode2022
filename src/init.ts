@@ -6,10 +6,17 @@ import Handlebars from 'handlebars';
 
 const NUMBER_MIN = 1;
 const NUMBER_MAX = 25;
-const TEMPLATE_DIR = path.join(__dirname, '..', 'template');
-const TEMPLATE_FILE = path.join(TEMPLATE_DIR, 'run.template');
-const TEMPLATE_CONTENTS = fs.readFileSync(TEMPLATE_FILE).toString();
-const TEMPLATE = Handlebars.compile(TEMPLATE_CONTENTS);
+const TEMPLATE_DIR = path.join(__dirname, '../template');
+const TEST_FILE = path.join(__dirname, '../runtests.sh');
+const TEST_OUTPUT_DIR = path.join(__dirname, '../tests');
+
+const SOURCE_TEMPLATE_FILE = path.join(TEMPLATE_DIR, 'run.template');
+const SOURCE_TEMPLATE_CONTENTS = fs.readFileSync(SOURCE_TEMPLATE_FILE).toString();
+const SOURCE_TEMPLATE = Handlebars.compile(SOURCE_TEMPLATE_CONTENTS);
+
+const TEST_TEMPLATE_FILE = path.join(TEMPLATE_DIR, 'test.template');
+const TEST_TEMPLATE_CONTENTS = fs.readFileSync(TEST_TEMPLATE_FILE).toString();
+const TEST_TEMPLATE = Handlebars.compile(TEST_TEMPLATE_CONTENTS);
 
 try
 {
@@ -34,12 +41,28 @@ try
 	fs.writeFileSync(inputFile, '');
 
 	// Create file
-	const fileContents = TEMPLATE({ number, formattedNumber });
+	const fileContents = SOURCE_TEMPLATE({ number, formattedNumber });
 	for (const prefix of ['first', 'second'])
 	{
 		const codeFile = path.join(srcDir, `${prefix}.ts`);
 		console.log(`Writing source file ${codeFile}...`);
 		fs.writeFileSync(codeFile, fileContents);
+	}
+
+	// Add tests
+	const testContents = TEST_TEMPLATE({ number, formattedNumber });
+	fs.appendFileSync(TEST_FILE, testContents);
+
+	// Add tests outputs
+	const testOutputDir = path.join(TEST_OUTPUT_DIR, formattedNumber);
+	console.log(`Creating directory ${testOutputDir}...`)
+	fs.mkdirSync(testOutputDir);
+
+	for (const prefix of ['first', 'second'])
+	{
+		const testOutputFile = path.join(TEST_OUTPUT_DIR, formattedNumber, `${prefix}.txt`);
+		console.log(`Writing empty test output file ${testOutputFile}...`);
+		fs.writeFileSync(testOutputFile, '');
 	}
 
 	// Done
