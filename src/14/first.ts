@@ -1,12 +1,11 @@
 
 import Enumerable from 'linq';
-import InputFile from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 import Pair from '../util/Pair';
 
 interface Point { x: number, y: number }
 
-const points = InputFile
-	.readLinesForDay(14)
+const points = readLinesForDay(14)
 	.select(line => line.split(' -> '))
 	.select(points => points.map(p => p.split(',')))
 	.select(points => points.map(p => p.toIntArray()))
