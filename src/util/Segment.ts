@@ -48,4 +48,14 @@ export default class Segment
 		const max = n[1] || 0;
 		return new Segment(min, max);
 	}
+
+	public static parse(input: string, regexp: RegExp): Segment
+	{
+		const match = regexp.exec(input);
+		if (!match)
+			throw new Error('RegExp did not match');
+		const min = parseFloat(match.groups?.['min'] ?? '');
+		const max = parseFloat(match.groups?.['max'] ?? '');
+		return new Segment(min, max);
+	}
 }
