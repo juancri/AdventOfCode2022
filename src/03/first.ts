@@ -1,7 +1,7 @@
 
 import '../util/ArrayExtensions';
 import { getRepeatedItems } from '../util/array';
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 
 console.log(readLinesForDay(3)
 	.select(line => line.split(''))

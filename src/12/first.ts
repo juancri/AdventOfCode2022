@@ -1,6 +1,6 @@
 
 import { WeightedDiGraph, Edge, Dijkstra } from 'js-graph-algorithms';
-import { readCharsMapForDay } from '../util/InputFile';
+import { readCharsMapForDay } from '../util/input';
 
 const map = readCharsMapForDay(12);
 const graph = new WeightedDiGraph(map.count());

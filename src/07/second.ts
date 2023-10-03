@@ -1,5 +1,5 @@
 
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 import Tree from '../util/Tree';
 
 const fs = new Tree<[string, number]>([ '/', 0 ]);

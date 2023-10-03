@@ -1,6 +1,5 @@
 
-import InputFile from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 
-console.log(InputFile
-	.readLinesForDay({{ number }})
+console.log(readLinesForDay({{ number }})
 	.toArray());

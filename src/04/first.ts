@@ -1,5 +1,5 @@
 
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 import Pair from '../util/Pair';
 import Segment from '../util/Segment';
 

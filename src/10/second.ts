@@ -1,5 +1,5 @@
 
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 
 const state = { cycle: 0, register: 1, row: '' };
 

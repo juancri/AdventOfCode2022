@@ -1,5 +1,5 @@
 
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 import RequireKeyMap from '../util/RequireKeyMap';
 
 const moves = new RequireKeyMap([

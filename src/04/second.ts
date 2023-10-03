@@ -1,5 +1,5 @@
 
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 import Segment from '../util/Segment';
 
 console.log(readLinesForDay(4)

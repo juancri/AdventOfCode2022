@@ -1,6 +1,6 @@
 
 import '../util/ArrayExtensions';
-import { readCharsForDay } from '../util/InputFile';
+import { readCharsForDay } from '../util/input';
 
 console.log(readCharsForDay(6)
 	.windows(14)

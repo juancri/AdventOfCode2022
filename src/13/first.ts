@@ -1,6 +1,6 @@
 
 import IndexedItem from '../util/IndexedItem';
-import { readLineGroupsForDay } from '../util/InputFile';
+import { readLineGroupsForDay } from '../util/input';
 import Pair from '../util/Pair';
 import StringReader from '../util/StringReader';
 

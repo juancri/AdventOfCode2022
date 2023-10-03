@@ -1,6 +1,6 @@
 
 import IndexedItem from '../util/IndexedItem';
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 import StringReader from '../util/StringReader';
 
 type Packet = number | Packet[];

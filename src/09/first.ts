@@ -1,6 +1,6 @@
 
 import { create, createWith } from '../util/array';
-import { readLinesForDay } from '../util/InputFile';
+import { readLinesForDay } from '../util/input';
 import RequireKeyMap from '../util/RequireKeyMap';
 
 interface Coords { x: number, y: number }

@@ -1,7 +1,7 @@
 
 import '../util/RegExpExtensions';
 import '../util/StringExtensions';
-import { readLineGroupsForDay } from '../util/InputFile';
+import { readLineGroupsForDay } from '../util/input';
 import RequireKeyMap from '../util/RequireKeyMap';
 
 const ops = new RequireKeyMap([

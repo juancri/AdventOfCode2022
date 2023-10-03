@@ -1,6 +1,6 @@
 
 import { transpose } from '../util/array';
-import { readLineGroupsForDay } from '../util/InputFile';
+import { readLineGroupsForDay } from '../util/input';
 
 const data = readLineGroupsForDay(5)
 	.toArray();

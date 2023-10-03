@@ -1,5 +1,5 @@
 
-import { readDigitsMapForDay } from '../util/InputFile';
+import { readDigitsMapForDay } from '../util/input';
 
 console.log(readDigitsMapForDay(8)
 	.getActionableEntries()
