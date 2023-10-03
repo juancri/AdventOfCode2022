@@ -26,8 +26,7 @@ const points = new Set<number>(pointsArray.map(pointToNumber));
 const initCount = points.size;
 const maxY = Enumerable
 	.from(pointsArray)
-	.select(p => p.y)
-	.max();
+	.max(p => p.y);
 
 function hasDirectlyUnder(p: Point2D)
 {
