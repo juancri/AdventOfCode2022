@@ -1,5 +1,5 @@
 
-import ArrayUtils from '../util/ArrayUtils';
+import { transpose } from '../util/array';
 import InputFile from '../util/InputFile';
 
 const data = InputFile
@@ -9,8 +9,7 @@ const letters = data.get(0)
 	.reverse()
 	.skip(1)
 	.select(line => line.split(''));
-const stacks = ArrayUtils
-	.transpose(letters.toArray(), ' ')
+const stacks = transpose(letters.toArray(), ' ')
 	.filter((_, index) => (index - 1) % 4 === 0)
 	.map(chars => chars.filter(c => c != ' '));
 
