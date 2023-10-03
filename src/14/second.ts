@@ -31,14 +31,6 @@ const initMaxY = Enumerable
 	.max();
 const floorY = initMaxY + 2;
 
-function canRest(p: Point2D): boolean
-{
-	return p.y === floorY - 1 ||
-		(points.has(pointToNumber({ x: p.x, y: p.y + 1 }))
-		&& points.has(pointToNumber({ x: p.x - 1, y: p.y + 1 }))
-		&& points.has(pointToNumber({ x: p.x + 1, y: p.y + 1 })));
-}
-
 function hasDirectlyUnder(p: Point2D)
 {
 	return p.y === floorY - 1 ||
@@ -68,9 +60,6 @@ function getNextPosition(): Point2D
 			continue;
 		}
 
-		if (canRest(pos))
-			return pos;
-
 		if (!hasDiagonalLeft(pos))
 		{
 			pos.x -= 1;
@@ -85,7 +74,7 @@ function getNextPosition(): Point2D
 			continue;
 		}
 
-		throw new Error(`should not get to this state with ${JSON.stringify(pos)}`);
+		return pos;
 	}
 }
 
