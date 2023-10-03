@@ -2,13 +2,11 @@
 import Enumerable from 'linq';
 import { readLinesForDay } from '../util/input';
 import Pair from '../util/Pair';
-import { Point2D, point2DFromArray } from '../util/point2D';
+import { Point2D, parsePoint2D } from '../util/point2D';
 
 const pointsArray = readLinesForDay(14)
 	.select(line => line.split(' -> '))
-	.select(points => points.map(p => p.split(',')))
-	.select(points => points.map(p => p.toIntArray()))
-	.select(points => points.map(point2DFromArray))
+	.select(points => points.map(p => parsePoint2D(p, /^(?<x>\d+),(?<y>\d+)$/)))
 	.selectMany(points => points.windows(2))
 	.select(Pair.fromArray)
 	.selectMany(({ first, second }) => Enumerable
