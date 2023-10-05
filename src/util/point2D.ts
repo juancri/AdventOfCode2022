@@ -22,3 +22,8 @@ export function parsePoint2D(input: string, regexp: RegExp): Point2D
 	const y = parseFloat(match.groups?.['y'] ?? '');
 	return { x, y };
 }
+
+export function getManhattanDistance(p1: Point2D, p2: Point2D): number
+{
+	return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+}

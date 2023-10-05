@@ -139,3 +139,13 @@
   result="$(node dist/14/second)"
   [ "$result" = "$(cat tests/14/second.txt)" ]
 }
+
+@test "15/first" {
+  result="$(node dist/15/first)"
+  [ "$result" = "$(cat tests/15/first.txt)" ]
+}
+
+@test "15/second" {
+  result="$(node dist/15/second)"
+  [ "$result" = "$(cat tests/15/second.txt)" ]
+}
