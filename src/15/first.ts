@@ -9,11 +9,9 @@ const data = readLinesForDay(15)
 	.select(match => match.toIntArray())
 	.select(array => array.buffer(2))
 	.select(groups => groups.map(point2DFromArray))
-	.select(groups => groups.toPair())
-	.select(({ first, second }) => ({ sensor: first, beacon: second }))
+	.select(pair => ({ sensor: pair.get(0), beacon: pair.get(1) }))
 	.select(info => ({ ...info, distance: getManhattanDistance(info.beacon, info.sensor) }))
-	.select(info => ({ ...info, distanceY: Math.abs(info.sensor.y - 2_000_000) }))
-	.select(info => ({ ...info, extra: info.distance - info.distanceY }))
+	.select(info => ({ ...info, extra: info.distance - Math.abs(info.sensor.y - 2_000_000) }))
 	.where(({ extra}) => extra >= 0)
 	.toArray();
 
@@ -21,5 +19,5 @@ console.log(data
 	.toEnumerable()
 	.selectMany(({ sensor, extra }) => Enumerable.range(sensor.x - extra, extra * 2 + 1))
 	.distinct()
-	.where(x => !data.some(info => info.beacon.y === 2_000_000 && info.beacon.x === x))
+	.where(x => !data.some(({ beacon }) => beacon.y === 2_000_000 && beacon.x === x))
 	.count());
