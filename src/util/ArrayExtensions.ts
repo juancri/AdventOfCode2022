@@ -73,7 +73,7 @@ Array.prototype.getLast = function()
 
 Array.prototype.min = function(selector)
 {
-	return this.toEnumerable().max(selector);
+	return this.toEnumerable().min(selector);
 }
 
 Array.prototype.max = function(selector)
