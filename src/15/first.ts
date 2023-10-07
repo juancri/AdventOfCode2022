@@ -1,5 +1,4 @@
 
-import Enumerable from 'linq';
 import { readLinesForDay } from '../util/input';
 import { getManhattanDistance, point2DFromArray } from '../util/point2D';
 
@@ -13,11 +12,31 @@ const data = readLinesForDay(15)
 	.select(info => ({ ...info, distance: getManhattanDistance(info.beacon, info.sensor) }))
 	.select(info => ({ ...info, extra: info.distance - Math.abs(info.sensor.y - 2_000_000) }))
 	.where(({ extra}) => extra >= 0)
-	.toArray();
+	.select(info => ({ ...info, rangeFrom: info.sensor.x - info.extra }))
+	.select(info => ({ ...info, rangeTo: info.sensor.x + info.extra }))
+	.toArray()
+	.toEnumerable();
+const beaconsInLine = data
+	.where(({ beacon }) => beacon.y === 2_000_000)
+	.distinct(({ beacon }) => beacon.x)
+	.count();
 
-console.log(data
-	.toEnumerable()
-	.selectMany(({ sensor, extra }) => Enumerable.range(sensor.x - extra, extra * 2 + 1))
-	.distinct()
-	.where(x => !data.some(({ beacon }) => beacon.y === 2_000_000 && beacon.x === x))
-	.count());
+let x = data.min(info => info.rangeFrom);
+let counter = 0;
+while (x <= data.max(info => info.rangeTo))
+{
+	const found = data
+		.where(info => info.rangeFrom <= x)
+		.where(info => info.rangeTo >= x)
+		.orderByDescending(info => info.rangeTo)
+		.firstOrDefault();
+	if (found === undefined)
+		x++;
+	else
+	{
+		counter += (found.rangeTo - x) + 1;
+		x = found.rangeTo + 1;
+	}
+}
+
+console.log(counter - beaconsInLine);
