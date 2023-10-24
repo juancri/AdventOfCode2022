@@ -5,7 +5,7 @@ This repo contains [JC](https://juancri.com)'s solutions for [Advent of Code 202
 
 ## Requirements
 
-- [Node 18.x](https://nodejs.org/en)
+- [Node 20.x](https://nodejs.org/en)
 - [GNU Make](https://www.gnu.org/software/make/)
 - [Bats-core](https://github.com/bats-core/bats-core) Optional to run tests
 
